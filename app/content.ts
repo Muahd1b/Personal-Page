@@ -24,9 +24,9 @@ export const heroContent = {
   ],
   meta: "born: oxford / raised: zurich / currently: traveling",
   links: [
-    { label: "instagram", href: "https://instagram.com/" },
-    { label: "business", href: "https://example.com" },
-    { label: "x", href: "https://x.com/" },
+    { label: "instagram", href: "https://www.instagram.com/jonas.knpel/" },
+    { label: "booked", href: "https://bookedin4u.com/" },
+    { label: "x", href: "https://x.com/Knaviation_og" },
   ],
 };
 

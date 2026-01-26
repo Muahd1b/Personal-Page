@@ -169,9 +169,9 @@
   }
 
   .startButton:hover {
-    border-color: rgba(242, 179, 106, 0.6);
-    color: var(--accent);
-    box-shadow: 0 0 18px rgba(242, 179, 106, 0.18);
+    border-color: rgba(255, 255, 255, 0.25);
+    color: var(--text-primary);
+    box-shadow: 0 0 18px rgba(255, 255, 255, 0.12);
   }
 }
 

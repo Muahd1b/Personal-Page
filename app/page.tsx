@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 import Typed from "typed.js";
 import styles from "./page.module.css";
 import { heroContent, heroPlainText } from "./content";
@@ -13,21 +13,23 @@ type Line = {
   text?: string;
 };
 
+const makeLine = (type: LineType, text?: string): Line => ({ type, text });
+
 const heroLines: Line[] = [
-  { type: "intro", text: heroContent.intro },
-  ...heroContent.lead.map((line) => ({ type: "line", text: line })),
+  makeLine("intro", heroContent.intro),
+  ...heroContent.lead.map((line) => makeLine("line", line)),
 ];
 
 heroContent.sections.forEach((section) => {
-  heroLines.push({ type: "spacer" });
-  heroLines.push({ type: "sectionTitle", text: section.title });
+  heroLines.push(makeLine("spacer"));
+  heroLines.push(makeLine("sectionTitle", section.title));
   section.items.forEach((item) => {
-    heroLines.push({ type: "bullet", text: `- ${item}` });
+    heroLines.push(makeLine("bullet", `- ${item}`));
   });
 });
 
-heroLines.push({ type: "spacer" });
-heroLines.push({ type: "meta", text: heroContent.meta });
+heroLines.push(makeLine("spacer"));
+heroLines.push(makeLine("meta", heroContent.meta));
 
 const classMap: Record<RenderLineType, string> = {
   intro: styles.intro,
@@ -247,7 +249,7 @@ export default function Home() {
             hasStarted ? (
               <div className={styles.typed}>
                 {heroLines.flatMap((line, index) => {
-                  const elements: JSX.Element[] = [];
+                  const elements: ReactNode[] = [];
                   if (line.type !== "spacer") {
                     const className = heroClassNames[line.type];
                     elements.push(
