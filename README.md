@@ -1,2 +1,2 @@
 Personal Page
-Tuped.js 
+Typed.js 
