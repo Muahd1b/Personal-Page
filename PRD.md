@@ -2,12 +2,12 @@
 
 Project Name: Personal Page (Hero)
 Owner: Jonas Knappel
-Date: 2024-XX-XX
+Date: 2026-01-26
 
 ## 1) Overview
-Create a single-page Next.js + React hero site that presents a short personal intro. The aesthetic should be minimal and dark, inspired by the provided reference image. The primary text is revealed with a typed.js animation, accompanied by a subtle high-pitch "typewriter" sound per character. Social links include Instagram, Business, and X with hover effects.
+Create a single-page Next.js + React hero site that presents a short personal intro. The aesthetic should be minimal and dark, inspired by the provided reference image. The primary text is revealed with a typed.js animation, accompanied by a subtle high-pitch "typewriter" sound per character. Social links include Instagram, Booked, and X with hover effects.
 
-Content copy is TBD and will be provided later. The initial build should support swapping in final text without reworking layout or animation logic.
+Content copy lives in a single module for easy updates without reworking layout or animation logic.
 
 ## 2) Goals
 - Deliver a polished, minimal hero page that feels intentional and cinematic.
@@ -38,17 +38,23 @@ Content copy is TBD and will be provided later. The initial build should support
 3. Typed.js integration:
    - Typing speed and delay tuned for readability.
    - Cursor visible and styled to match the design.
-4. Audio per character:
+4. Start control:
+   - "Start the journey" button begins typing and audio.
+5. Audio per character:
    - High-pitch, short "beep" (typewriter-style).
    - Audio starts only after explicit user interaction (e.g., first click/keypress).
    - Provide a mute toggle or respect browser autoplay restrictions.
-5. Social links:
-   - Instagram, Business, X.
+6. Social links:
+   - Instagram, Booked, X.
    - Hover effects with a subtle glow/underline/shift.
-6. Typography:
+7. Inline lead link:
+   - The word "booked" in the lead text is a clickable link with the same hover effect as other links.
+8. Typography:
    - Inter as the primary font.
-7. Responsive design:
+9. Responsive design:
    - Mobile-first, readable text scale and line lengths.
+10. Favicon:
+   - Use the provided PNG as the browser favicon.
 
 ## 7) Non-Functional Requirements
 - Performance: Fast load, minimal dependencies.
@@ -81,7 +87,9 @@ Content copy is TBD and will be provided later. The initial build should support
   - Provide reduced motion behavior with immediate full text.
 
 ## 12) Milestones
-1. Scaffold Next.js app and layout.
-2. Implement typed.js effect.
-3. Implement audio feedback with mute/interaction gating.
-4. Polish hover effects and responsive layout.
+1. Scaffold Next.js app and layout. (done)
+2. Implement typed.js effect. (done)
+3. Implement audio feedback with mute/interaction gating. (done)
+4. Add "Start the journey" trigger. (done)
+5. Add inline Booked link styling in lead. (done)
+6. Set PNG favicon. (done)
