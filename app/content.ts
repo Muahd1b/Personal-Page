@@ -10,7 +10,7 @@ export const heroContent = {
       items: [
         "build sustainable outreach and management systems",
         "scaled digital appearance for several brands",
-        "initialised a global network of entrpreneurs",
+        "initialised a global network of entrepreneurs",
       ],
     },
     {
