@@ -1,28 +1,28 @@
 export const heroContent = {
   intro: "hi, i'm jonas :)",
   lead: [
-    "i scale booked and kernscale, a mobile app venture studio",
-    "we've done 10m+ downloads across 50+ apps ",
+    "i scale booked and kernscale, a collaboration, leading the",
+    "frontier in digital persuasion and innovative marketing",
   ],
   sections: [
     {
       title: "along the way we've",
       items: [
-        "collaborated with the world's biggest creators",
-        "hit #1 on the app store multiple times",
-        "had a couple apps get acquired",
+        "build sustainable outreach and management systems",
+        "scaled digital appearance for several brands",
+        "initialised a global network of entrpreneurs",
       ],
     },
     {
       title: "some personal sidequests",
       items: [
-        "sold a mobile gaming company",
-        "grew my tiktok to 400k followers",
-        "worked with brands like pepsi and bugatti",
+        "iterated skills in designing and software development",
+        "explored attention mechanisms in between psychology, economics and innovation",
+        "fly sailplanes around europe",
       ],
     },
   ],
-  meta: "born: oxford / raised: zurich / currently: traveling",
+  meta: "born: neubrandenburg / raised: germany / currently: school",
   links: [
     { label: "instagram", href: "https://www.instagram.com/jonas.knpel/" },
     { label: "booked", href: "https://bookedin4u.com/" },
