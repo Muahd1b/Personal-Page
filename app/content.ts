@@ -24,9 +24,22 @@ export const heroContent = {
   ],
   meta: "born: neubrandenburg / raised: germany / currently: school",
   links: [
-    { label: "instagram", href: "https://www.instagram.com/jonasknppel/" },
-    { label: "booked", href: "https://bookedin4u.com/" },
-    { label: "x", href: "https://x.com/Knaviation_og" },
+    {
+      label: "booked",
+      href: "https://bookedin4u.com/",
+    },
+    {
+      label: "kernscale",
+      href: "https://www.kernscale.de/",
+    },
+    {
+      label: "instagram",
+      href: "https://www.instagram.com/jonasknppel/",
+    },
+    {
+      label: "x",
+      href: "https://x.com/Knaviation_og",
+    },
   ],
 };
 
