@@ -3,7 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 
 const siteUrl = "https://jonasknppel.me";
-const siteTitle = "Jonas Knüppel";
+const siteTitle = "Attention is currency";
 const siteDescription = "Attention is currency";
 
 const inter = Inter({
@@ -14,12 +14,9 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
-  title: {
-    default: siteTitle,
-    template: "%s | Jonas Knoppel",
-  },
+  title: siteTitle,
   description: siteDescription,
-  applicationName: "Jonas Knüppel",
+  applicationName: siteTitle,
   alternates: {
     canonical: "/",
   },
