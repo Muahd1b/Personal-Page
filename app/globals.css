@@ -65,3 +65,18 @@ html {
   color-scheme: dark;
   background-color: var(--bg-1);
 }
+
+@media (max-width: 720px) {
+  html,
+  body {
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior-y: auto;
+  }
+
+  body {
+    position: static;
+    inset: auto;
+    width: auto;
+  }
+}
