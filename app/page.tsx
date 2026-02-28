@@ -371,8 +371,8 @@ export default function Home() {
       const py = (1 - pointer.y / height) * trailCanvas.height;
       const radius = 14 + pointer.speed * 54;
       const gradient = trailContext.createRadialGradient(px, py, 0, px, py, radius);
-      gradient.addColorStop(0, `rgba(48, 96, 255, ${0.25 + pointer.speed * 0.55})`);
-      gradient.addColorStop(0.45, `rgba(32, 72, 200, ${0.18 + pointer.speed * 0.22})`);
+      gradient.addColorStop(0, `rgba(48, 96, 255, ${0.19 + pointer.speed * 0.40})`);
+      gradient.addColorStop(0.45, `rgba(32, 72, 200, ${0.14 + pointer.speed * 0.16})`);
       gradient.addColorStop(1, "rgba(8, 16, 60, 0)");
       trailContext.globalCompositeOperation = "lighter";
       trailContext.fillStyle = gradient;
@@ -404,8 +404,8 @@ export default function Home() {
       gl.uniform2f(uResolution, width, height);
       gl.uniform1f(uGridSize, width < 900 ? 15 : 15.5);
       gl.uniform2f(uCenterFadeThreshold, 0.4, 0.6);
-      gl.uniform1f(uTrailStrength, 10.0);
-      gl.uniform1f(uGlowStrength, Math.min(1.2, glowStrength * 2.0));
+      gl.uniform1f(uTrailStrength, 8.2);
+      gl.uniform1f(uGlowStrength, Math.min(0.95, glowStrength * 1.55));
       gl.uniform1f(uAtmosphereStrength, 1.0);
       gl.uniform1f(uGridBaseStrength, 0.14);
 
