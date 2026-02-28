@@ -4,7 +4,7 @@ import "./globals.css";
 
 const siteUrl = "https://jonasknppel.me";
 const siteTitle = "Jonas Knüppel";
-const siteDescription = "Attention is curency";
+const siteDescription = "Attention is currency";
 
 const inter = Inter({
   variable: "--font-inter",
