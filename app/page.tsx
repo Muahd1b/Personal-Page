@@ -232,10 +232,10 @@ export default function Home() {
         vec2 uv = vUv;
         float aspect = uResolution.x / uResolution.y;
 
-        vec3 base = vec3(0.01, 0.03, 0.07);
-        base += vec3(0.02, 0.06, 0.12) * (1.0 - uv.x * 0.72);
+        vec3 base = vec3(0.005, 0.012, 0.028);
+        base += vec3(0.010, 0.028, 0.060) * (1.0 - uv.x * 0.72);
         float atmo = pow(max(0.0, 1.0 - distance(uv, vec2(0.12, 0.24)) * 1.35), 2.0);
-        base += vec3(0.02, 0.05, 0.10) * atmo * uAtmosphereStrength;
+        base += vec3(0.010, 0.024, 0.050) * atmo * uAtmosphereStrength;
 
         vec2 circleOrigin = uv - vec2(0.5);
         circleOrigin.x *= aspect;
@@ -252,9 +252,9 @@ export default function Home() {
         float baseBoost = grid * radialEnvelope * 2.5;
         float trailBoost = grid * radialEnvelope * (trail * uTrailStrength * uGlowStrength);
 
-        color += vec3(0.03, 0.08, 0.16) * baseGrid;
+        color += vec3(0.020, 0.055, 0.115) * baseGrid;
         color += pow(max(color, vec3(0.0)), vec3(1.3)) * baseBoost * 0.16;
-        color += vec3(0.24, 0.46, 0.70) * trailBoost * 0.30;
+        color += vec3(0.165, 0.315, 0.500) * trailBoost * 0.30;
 
         gl_FragColor = vec4(color, 1.0);
       }
