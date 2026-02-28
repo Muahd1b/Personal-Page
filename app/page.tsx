@@ -582,6 +582,7 @@ export default function Home() {
         aria-hidden="true"
       />
       <main className={styles.main}>
+        <h1 className={styles.srOnly}>Attention is currency</h1>
         <div className={styles.textBlock}>
           {prefersReducedMotion ? (
             hasStarted ? (

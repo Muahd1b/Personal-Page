@@ -1,4 +1,4 @@
-Personal Page
+Attention is currency
 
 Single-page hero site built with Next.js + React. Inter typography, typed.js text reveal with audio, an inline Booked link in the lead, and hover effects on social links.
 

@@ -4,7 +4,8 @@ import "./globals.css";
 
 const siteUrl = "https://jonasknppel.me";
 const siteTitle = "Attention is currency";
-const siteDescription = "Attention is currency";
+const siteDescription =
+  "Attention is currency. Jonas Knüppel builds digital persuasion and brand systems with Booked and Kernscale.";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -21,12 +22,13 @@ export const metadata: Metadata = {
     canonical: "/",
   },
   keywords: [
-    "Jonas Knoppel",
+    "Jonas Knüppel",
+    "attention is currency",
     "Booked",
     "Kernscale",
-    "personal website",
     "digital marketing",
     "branding",
+    "digital persuasion",
   ],
   authors: [{ name: "Jonas Knüppel", url: siteUrl }],
   creator: "Jonas Knüppel",
@@ -36,13 +38,13 @@ export const metadata: Metadata = {
     url: siteUrl,
     title: siteTitle,
     description: siteDescription,
-    siteName: "Jonas Knüppel",
+    siteName: siteTitle,
     images: [
       {
         url: "/icon.png",
         width: 512,
         height: 512,
-        alt: "Jonas Knüppel personal website preview",
+        alt: "Attention is currency preview",
       },
     ],
     locale: "en_US",
@@ -81,14 +83,41 @@ export default function RootLayout({
       "https://x.com/Knaviation_og",
     ],
     jobTitle: "Digital Marketing and Brand Strategy",
+    worksFor: [
+      {
+        "@type": "Organization",
+        name: "Booked",
+        url: "https://bookedin4u.com/",
+      },
+      {
+        "@type": "Organization",
+        name: "Kernscale",
+        url: "https://www.kernscale.de/",
+      },
+    ],
   };
+
+  const websiteJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: siteTitle,
+    url: siteUrl,
+    inLanguage: "en",
+    description: siteDescription,
+    publisher: {
+      "@type": "Person",
+      name: "Jonas Knüppel",
+    },
+  };
+
+  const structuredData = [personJsonLd, websiteJsonLd];
 
   return (
     <html lang="en">
       <body className={inter.variable}>
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
         />
         {children}
       </body>

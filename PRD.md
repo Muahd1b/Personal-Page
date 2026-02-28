@@ -1,6 +1,6 @@
 # Product Requirements Document (PRD)
 
-Project Name: Personal Page (Hero)
+Project Name: Attention is currency (Hero)
 Owner: Jonas Knappel
 Date: 2026-01-26
 
