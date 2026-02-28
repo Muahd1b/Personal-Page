@@ -174,6 +174,7 @@ const useTypingAudio = () => {
 };
 
 export default function Home() {
+  const backgroundCanvasRef = useRef<HTMLCanvasElement>(null);
   const typedRef = useRef<HTMLSpanElement>(null);
   const lastTextRef = useRef("");
   const [hasStarted, setHasStarted] = useState(false);
@@ -188,6 +189,299 @@ export default function Home() {
     toggleAudio,
   } = useTypingAudio();
   const shouldType = hasStarted && !prefersReducedMotion;
+
+  useEffect(() => {
+    const canvas = backgroundCanvasRef.current;
+    if (!canvas) return;
+
+    const gl = canvas.getContext("webgl", {
+      alpha: false,
+      antialias: true,
+      preserveDrawingBuffer: false,
+    });
+    if (!gl) return;
+
+    const prefersReduced = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+
+    const vertexShaderSource = `
+      attribute vec2 aPosition;
+      varying vec2 vUv;
+      void main() {
+        vUv = aPosition * 0.5 + 0.5;
+        gl_Position = vec4(aPosition, 0.0, 1.0);
+      }
+    `;
+
+    const fragmentShaderSource = `
+      precision mediump float;
+      varying vec2 vUv;
+
+      uniform vec2 uResolution;
+      uniform sampler2D uGridTex;
+      uniform sampler2D uTrailTex;
+      uniform float uGridSize;
+      uniform vec2 uCenterFadeThreshold;
+      uniform float uTrailStrength;
+      uniform float uGlowStrength;
+      uniform float uAtmosphereStrength;
+      uniform float uGridBaseStrength;
+
+      void main() {
+        vec2 uv = vUv;
+        float aspect = uResolution.x / uResolution.y;
+
+        vec3 base = vec3(0.01, 0.03, 0.07);
+        base += vec3(0.02, 0.06, 0.12) * (1.0 - uv.x * 0.72);
+        float atmo = pow(max(0.0, 1.0 - distance(uv, vec2(0.12, 0.24)) * 1.35), 2.0);
+        base += vec3(0.02, 0.05, 0.10) * atmo * uAtmosphereStrength;
+
+        vec2 circleOrigin = uv - vec2(0.5);
+        circleOrigin.x *= aspect;
+        float dist = distance(circleOrigin, vec2(0.0));
+        float centerFade = smoothstep(uCenterFadeThreshold.x, uCenterFadeThreshold.y, dist);
+
+        vec2 aspectUv = vec2(uv.x * aspect, uv.y);
+        float grid = texture2D(uGridTex, aspectUv * uGridSize).a;
+        float trail = texture2D(uTrailTex, uv).b;
+        float radialEnvelope = mix(0.72, 1.0, centerFade);
+
+        vec3 color = base;
+        float baseGrid = pow(grid, 1.6) * uGridBaseStrength;
+        float baseBoost = grid * radialEnvelope * 2.5;
+        float trailBoost = grid * radialEnvelope * (trail * uTrailStrength * uGlowStrength);
+
+        color += vec3(0.03, 0.08, 0.16) * baseGrid;
+        color += pow(max(color, vec3(0.0)), vec3(1.3)) * baseBoost * 0.16;
+        color += vec3(0.24, 0.46, 0.70) * trailBoost * 0.30;
+
+        gl_FragColor = vec4(color, 1.0);
+      }
+    `;
+
+    const compileShader = (type: number, source: string) => {
+      const shader = gl.createShader(type);
+      if (!shader) return null;
+      gl.shaderSource(shader, source);
+      gl.compileShader(shader);
+      if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+        gl.deleteShader(shader);
+        return null;
+      }
+      return shader;
+    };
+
+    const vertexShader = compileShader(gl.VERTEX_SHADER, vertexShaderSource);
+    const fragmentShader = compileShader(gl.FRAGMENT_SHADER, fragmentShaderSource);
+    if (!vertexShader || !fragmentShader) return;
+
+    const program = gl.createProgram();
+    if (!program) return;
+    gl.attachShader(program, vertexShader);
+    gl.attachShader(program, fragmentShader);
+    gl.linkProgram(program);
+    if (!gl.getProgramParameter(program, gl.LINK_STATUS)) return;
+
+    const positionBuffer = gl.createBuffer();
+    if (!positionBuffer) return;
+    gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+    gl.bufferData(
+      gl.ARRAY_BUFFER,
+      new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]),
+      gl.STATIC_DRAW,
+    );
+
+    const positionLocation = gl.getAttribLocation(program, "aPosition");
+    const uResolution = gl.getUniformLocation(program, "uResolution");
+    const uGridTex = gl.getUniformLocation(program, "uGridTex");
+    const uTrailTex = gl.getUniformLocation(program, "uTrailTex");
+    const uGridSize = gl.getUniformLocation(program, "uGridSize");
+    const uCenterFadeThreshold = gl.getUniformLocation(program, "uCenterFadeThreshold");
+    const uTrailStrength = gl.getUniformLocation(program, "uTrailStrength");
+    const uGlowStrength = gl.getUniformLocation(program, "uGlowStrength");
+    const uAtmosphereStrength = gl.getUniformLocation(program, "uAtmosphereStrength");
+    const uGridBaseStrength = gl.getUniformLocation(program, "uGridBaseStrength");
+
+    const gridTexture = gl.createTexture();
+    const trailTexture = gl.createTexture();
+    if (!gridTexture || !trailTexture) return;
+
+    const trailCanvas = document.createElement("canvas");
+    const trailContext = trailCanvas.getContext("2d");
+    if (!trailContext) return;
+
+    const pointer = {
+      x: window.innerWidth * 0.5,
+      y: window.innerHeight * 0.5,
+      tx: window.innerWidth * 0.5,
+      ty: window.innerHeight * 0.5,
+      px: window.innerWidth * 0.5,
+      py: window.innerHeight * 0.5,
+      vx: 0,
+      vy: 0,
+      speed: 0,
+    };
+
+    let glowStrength = 0;
+    let width = 0;
+    let height = 0;
+    let dpr = 1;
+    let raf = 0;
+    let gridReady = false;
+
+    const gridImage = new Image();
+    const gridPotCanvas = document.createElement("canvas");
+    gridPotCanvas.width = 1024;
+    gridPotCanvas.height = 1024;
+    const gridPotContext = gridPotCanvas.getContext("2d");
+    if (!gridPotContext) return;
+
+    const resize = () => {
+      width = window.innerWidth;
+      height = window.innerHeight;
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+
+      canvas.width = Math.floor(width * dpr);
+      canvas.height = Math.floor(height * dpr);
+      canvas.style.width = `${width}px`;
+      canvas.style.height = `${height}px`;
+      gl.viewport(0, 0, canvas.width, canvas.height);
+
+      trailCanvas.width = Math.max(256, Math.floor(width * 0.5));
+      trailCanvas.height = Math.max(256, Math.floor(height * 0.5));
+      trailContext.fillStyle = "rgb(0, 0, 0)";
+      trailContext.fillRect(0, 0, trailCanvas.width, trailCanvas.height);
+    };
+
+    const onPointerMove = (event: PointerEvent) => {
+      pointer.tx = event.clientX;
+      pointer.ty = event.clientY;
+    };
+
+    const updateTrail = () => {
+      const fadeAlpha = prefersReduced ? 0.13 : 0.07;
+      trailContext.globalCompositeOperation = "source-over";
+      trailContext.fillStyle = `rgba(0, 0, 0, ${fadeAlpha})`;
+      trailContext.fillRect(0, 0, trailCanvas.width, trailCanvas.height);
+
+      if (prefersReduced || pointer.speed < 0.015) return;
+
+      const px = (pointer.x / width) * trailCanvas.width;
+      const py = (1 - pointer.y / height) * trailCanvas.height;
+      const radius = 14 + pointer.speed * 54;
+      const gradient = trailContext.createRadialGradient(px, py, 0, px, py, radius);
+      gradient.addColorStop(0, `rgba(48, 96, 255, ${0.25 + pointer.speed * 0.55})`);
+      gradient.addColorStop(0.45, `rgba(32, 72, 200, ${0.18 + pointer.speed * 0.22})`);
+      gradient.addColorStop(1, "rgba(8, 16, 60, 0)");
+      trailContext.globalCompositeOperation = "lighter";
+      trailContext.fillStyle = gradient;
+      trailContext.fillRect(px - radius, py - radius, radius * 2, radius * 2);
+    };
+
+    const render = () => {
+      const dx = pointer.tx - pointer.px;
+      const dy = pointer.ty - pointer.py;
+      pointer.px = pointer.tx;
+      pointer.py = pointer.ty;
+      pointer.vx = dx;
+      pointer.vy = dy;
+      pointer.x = pointer.tx;
+      pointer.y = pointer.ty;
+      pointer.speed = Math.min(
+        Math.sqrt(pointer.vx * pointer.vx + pointer.vy * pointer.vy) / 42,
+        1,
+      );
+      glowStrength = glowStrength * 0.92 + pointer.speed * 0.42;
+
+      updateTrail();
+
+      gl.useProgram(program);
+      gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+      gl.enableVertexAttribArray(positionLocation);
+      gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
+
+      gl.uniform2f(uResolution, width, height);
+      gl.uniform1f(uGridSize, width < 900 ? 15 : 15.5);
+      gl.uniform2f(uCenterFadeThreshold, 0.4, 0.6);
+      gl.uniform1f(uTrailStrength, 10.0);
+      gl.uniform1f(uGlowStrength, Math.min(1.2, glowStrength * 2.0));
+      gl.uniform1f(uAtmosphereStrength, 1.0);
+      gl.uniform1f(uGridBaseStrength, 0.14);
+
+      gl.activeTexture(gl.TEXTURE0);
+      gl.bindTexture(gl.TEXTURE_2D, gridTexture);
+      if (gridReady) {
+        gl.texImage2D(
+          gl.TEXTURE_2D,
+          0,
+          gl.RGBA,
+          gl.RGBA,
+          gl.UNSIGNED_BYTE,
+          gridPotCanvas,
+        );
+      }
+      gl.uniform1i(uGridTex, 0);
+
+      gl.activeTexture(gl.TEXTURE1);
+      gl.bindTexture(gl.TEXTURE_2D, trailTexture);
+      gl.texImage2D(
+        gl.TEXTURE_2D,
+        0,
+        gl.RGBA,
+        gl.RGBA,
+        gl.UNSIGNED_BYTE,
+        trailCanvas,
+      );
+      gl.uniform1i(uTrailTex, 1);
+
+      gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+      raf = window.requestAnimationFrame(render);
+    };
+
+    gl.bindTexture(gl.TEXTURE_2D, gridTexture);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+
+    gl.bindTexture(gl.TEXTURE_2D, trailTexture);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+
+    gridImage.src = "/oceanx-grid.png";
+    gridImage.onload = () => {
+      gridPotContext.clearRect(0, 0, gridPotCanvas.width, gridPotCanvas.height);
+      gridPotContext.drawImage(
+        gridImage,
+        0,
+        0,
+        gridPotCanvas.width,
+        gridPotCanvas.height,
+      );
+      gridReady = true;
+    };
+
+    resize();
+    window.addEventListener("resize", resize);
+    window.addEventListener("pointermove", onPointerMove, { passive: true });
+    raf = window.requestAnimationFrame(render);
+
+    return () => {
+      window.cancelAnimationFrame(raf);
+      window.removeEventListener("resize", resize);
+      window.removeEventListener("pointermove", onPointerMove);
+      gl.deleteTexture(gridTexture);
+      gl.deleteTexture(trailTexture);
+      gl.deleteBuffer(positionBuffer);
+      gl.deleteProgram(program);
+      gl.deleteShader(vertexShader);
+      gl.deleteShader(fragmentShader);
+      gridImage.onload = null;
+    };
+  }, []);
 
   useEffect(() => {
     if (!shouldType || !typedRef.current || typingStartedRef.current) return;
@@ -233,7 +527,7 @@ export default function Home() {
       lastTextRef.current = "";
       typingStartedRef.current = false;
     };
-  }, [shouldType, typedMarkup, playBeep]);
+  }, [shouldType, playBeep]);
 
   const handleStart = () => {
     if (hasStarted) return;
@@ -243,6 +537,11 @@ export default function Home() {
 
   return (
     <div className={styles.page}>
+      <canvas
+        ref={backgroundCanvasRef}
+        className={styles.backgroundCanvas}
+        aria-hidden="true"
+      />
       <main className={styles.main}>
         <div className={styles.textBlock}>
           {prefersReducedMotion ? (
