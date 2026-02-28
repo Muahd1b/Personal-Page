@@ -329,6 +329,7 @@ export default function Home() {
     let dpr = 1;
     let raf = 0;
     let gridReady = false;
+    let touchActive = false;
 
     const gridImage = new Image();
     const gridPotCanvas = document.createElement("canvas");
@@ -359,24 +360,51 @@ export default function Home() {
       pointer.ty = event.clientY;
     };
 
-    const updateTrail = () => {
+    const updateTrail = (interactionStrength: number) => {
       const fadeAlpha = prefersReduced ? 0.13 : 0.07;
       trailContext.globalCompositeOperation = "source-over";
       trailContext.fillStyle = `rgba(0, 0, 0, ${fadeAlpha})`;
       trailContext.fillRect(0, 0, trailCanvas.width, trailCanvas.height);
 
-      if (prefersReduced || pointer.speed < 0.015) return;
+      if (prefersReduced || interactionStrength < 0.015) return;
 
       const px = (pointer.x / width) * trailCanvas.width;
       const py = (1 - pointer.y / height) * trailCanvas.height;
-      const radius = 14 + pointer.speed * 54;
+      const radius = 14 + interactionStrength * 54;
       const gradient = trailContext.createRadialGradient(px, py, 0, px, py, radius);
-      gradient.addColorStop(0, `rgba(48, 96, 255, ${0.19 + pointer.speed * 0.40})`);
-      gradient.addColorStop(0.45, `rgba(32, 72, 200, ${0.14 + pointer.speed * 0.16})`);
+      gradient.addColorStop(
+        0,
+        `rgba(48, 96, 255, ${0.18 + interactionStrength * 0.37})`,
+      );
+      gradient.addColorStop(
+        0.45,
+        `rgba(32, 72, 200, ${0.13 + interactionStrength * 0.15})`,
+      );
       gradient.addColorStop(1, "rgba(8, 16, 60, 0)");
       trailContext.globalCompositeOperation = "lighter";
       trailContext.fillStyle = gradient;
       trailContext.fillRect(px - radius, py - radius, radius * 2, radius * 2);
+    };
+
+    const setTouchPointer = (event: TouchEvent) => {
+      const touch = event.touches[0];
+      if (!touch) return;
+      pointer.tx = touch.clientX;
+      pointer.ty = touch.clientY;
+    };
+
+    const onTouchStart = (event: TouchEvent) => {
+      touchActive = true;
+      setTouchPointer(event);
+    };
+
+    const onTouchMove = (event: TouchEvent) => {
+      touchActive = true;
+      setTouchPointer(event);
+    };
+
+    const onTouchEnd = () => {
+      touchActive = false;
     };
 
     const render = () => {
@@ -392,9 +420,12 @@ export default function Home() {
         Math.sqrt(pointer.vx * pointer.vx + pointer.vy * pointer.vy) / 42,
         1,
       );
-      glowStrength = glowStrength * 0.92 + pointer.speed * 0.42;
+      const interactionStrength = touchActive
+        ? Math.max(pointer.speed, 0.055)
+        : pointer.speed;
+      glowStrength = glowStrength * 0.92 + interactionStrength * 0.42;
 
-      updateTrail();
+      updateTrail(interactionStrength);
 
       gl.useProgram(program);
       gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
@@ -404,8 +435,8 @@ export default function Home() {
       gl.uniform2f(uResolution, width, height);
       gl.uniform1f(uGridSize, width < 900 ? 15 : 15.5);
       gl.uniform2f(uCenterFadeThreshold, 0.4, 0.6);
-      gl.uniform1f(uTrailStrength, 8.2);
-      gl.uniform1f(uGlowStrength, Math.min(0.95, glowStrength * 1.55));
+      gl.uniform1f(uTrailStrength, 7.8);
+      gl.uniform1f(uGlowStrength, Math.min(0.9, glowStrength * 1.45));
       gl.uniform1f(uAtmosphereStrength, 1.0);
       gl.uniform1f(uGridBaseStrength, 0.14);
 
@@ -467,12 +498,20 @@ export default function Home() {
     resize();
     window.addEventListener("resize", resize);
     window.addEventListener("pointermove", onPointerMove, { passive: true });
+    window.addEventListener("touchstart", onTouchStart, { passive: true });
+    window.addEventListener("touchmove", onTouchMove, { passive: true });
+    window.addEventListener("touchend", onTouchEnd, { passive: true });
+    window.addEventListener("touchcancel", onTouchEnd, { passive: true });
     raf = window.requestAnimationFrame(render);
 
     return () => {
       window.cancelAnimationFrame(raf);
       window.removeEventListener("resize", resize);
       window.removeEventListener("pointermove", onPointerMove);
+      window.removeEventListener("touchstart", onTouchStart);
+      window.removeEventListener("touchmove", onTouchMove);
+      window.removeEventListener("touchend", onTouchEnd);
+      window.removeEventListener("touchcancel", onTouchEnd);
       gl.deleteTexture(gridTexture);
       gl.deleteTexture(trailTexture);
       gl.deleteBuffer(positionBuffer);
