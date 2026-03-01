@@ -7,6 +7,7 @@ import { heroContent, heroPlainText } from "./content";
 
 type LineType = "intro" | "line" | "sectionTitle" | "bullet" | "meta" | "spacer";
 type RenderLineType = Exclude<LineType, "spacer">;
+type LoaderPhase = "loading" | "exiting" | "done";
 
 type Line = {
   type: LineType;
@@ -179,6 +180,9 @@ export default function Home() {
   const lastTextRef = useRef("");
   const [hasStarted, setHasStarted] = useState(false);
   const typingStartedRef = useRef(false);
+  const progressRef = useRef(0);
+  const [loaderPhase, setLoaderPhase] = useState<LoaderPhase>("loading");
+  const [displayProgress, setDisplayProgress] = useState(0);
   const prefersReducedMotion = usePrefersReducedMotion();
   const {
     audioEnabled,
@@ -188,7 +192,132 @@ export default function Home() {
     playBeep,
     toggleAudio,
   } = useTypingAudio();
-  const shouldType = hasStarted && !prefersReducedMotion;
+  const loaderDone = loaderPhase === "done";
+  const shouldType = loaderDone && hasStarted && !prefersReducedMotion;
+
+  useEffect(() => {
+    if (loaderPhase !== "loading") return;
+
+    const MIN_DURATION = prefersReducedMotion ? 480 : 1100;
+    const SOFT_DURATION = prefersReducedMotion ? 900 : 2600;
+    const HARD_TIMEOUT = 8000;
+    const startedAt = performance.now();
+    let raf = 0;
+    let hardTimeout = 0;
+    let cancelled = false;
+    let transitioning = false;
+    let onReady: (() => void) | null = null;
+    const completion = {
+      dom: false,
+      fonts: false,
+      grid: false,
+      min: false,
+    };
+    const weights = {
+      dom: 20,
+      fonts: 25,
+      grid: 35,
+      min: 20,
+    } as const;
+
+    const mark = (task: keyof typeof completion) => {
+      completion[task] = true;
+    };
+
+    if (document.readyState === "complete" || document.readyState === "interactive") {
+      mark("dom");
+    } else {
+      onReady = () => {
+        mark("dom");
+        if (onReady) {
+          window.removeEventListener("DOMContentLoaded", onReady);
+          onReady = null;
+        }
+      };
+      window.addEventListener("DOMContentLoaded", onReady);
+    }
+
+    if ("fonts" in document && document.fonts?.ready) {
+      document.fonts.ready
+        .then(() => mark("fonts"))
+        .catch(() => mark("fonts"));
+    } else {
+      mark("fonts");
+    }
+
+    const gridImage = new Image();
+    gridImage.decoding = "async";
+    gridImage.src = "/oceanx-grid.png";
+    gridImage.onload = () => mark("grid");
+    gridImage.onerror = () => mark("grid");
+
+    const computeRealProgress = () => {
+      let value = 0;
+      if (completion.dom) value += weights.dom;
+      if (completion.fonts) value += weights.fonts;
+      if (completion.grid) value += weights.grid;
+      if (completion.min) value += weights.min;
+      return value;
+    };
+
+    const isFullyReady = () =>
+      completion.dom && completion.fonts && completion.grid && completion.min;
+
+    const renderProgress = () => {
+      if (cancelled) return;
+
+      const elapsed = performance.now() - startedAt;
+      if (elapsed >= MIN_DURATION) mark("min");
+      const syntheticProgress = Math.min(95, (elapsed / SOFT_DURATION) * 95);
+      const realProgress = computeRealProgress();
+      const ready = isFullyReady();
+      const target = ready ? 100 : Math.max(realProgress, syntheticProgress);
+
+      setDisplayProgress((previous) => {
+        const easing = ready ? 0.22 : 0.1;
+        let next = previous + (target - previous) * easing;
+        if (Math.abs(next - target) < 0.18) next = target;
+        next = Math.min(100, Math.max(0, next));
+        progressRef.current = next;
+        return next;
+      });
+
+      if (!transitioning && ready && progressRef.current >= 99.4) {
+        transitioning = true;
+        setLoaderPhase("exiting");
+        return;
+      }
+
+      raf = window.requestAnimationFrame(renderProgress);
+    };
+
+    hardTimeout = window.setTimeout(() => {
+      completion.dom = true;
+      completion.fonts = true;
+      completion.grid = true;
+      completion.min = true;
+    }, HARD_TIMEOUT);
+
+    raf = window.requestAnimationFrame(renderProgress);
+
+    return () => {
+      cancelled = true;
+      window.cancelAnimationFrame(raf);
+      window.clearTimeout(hardTimeout);
+      if (onReady) window.removeEventListener("DOMContentLoaded", onReady);
+      gridImage.onload = null;
+      gridImage.onerror = null;
+    };
+  }, [loaderPhase, prefersReducedMotion]);
+
+  useEffect(() => {
+    if (loaderPhase !== "exiting") return;
+    const timer = window.setTimeout(
+      () => setLoaderPhase("done"),
+      prefersReducedMotion ? 220 : 650,
+    );
+    return () => window.clearTimeout(timer);
+  }, [loaderPhase, prefersReducedMotion]);
 
   useEffect(() => {
     const canvas = backgroundCanvasRef.current;
@@ -569,7 +698,7 @@ export default function Home() {
   }, [shouldType, playBeep]);
 
   const handleStart = () => {
-    if (hasStarted) return;
+    if (hasStarted || !loaderDone) return;
     enableAudio();
     setHasStarted(true);
   };
@@ -581,11 +710,28 @@ export default function Home() {
         className={styles.backgroundCanvas}
         aria-hidden="true"
       />
-      <main className={styles.main}>
+      <div className={styles.loaderOverlay} data-phase={loaderPhase} aria-hidden={loaderDone}>
+        <div className={styles.loaderCenter}>
+          <div className={styles.loaderLineTrack} aria-hidden="true">
+            <div
+              className={styles.loaderLineFill}
+              style={{ transform: `scaleY(${displayProgress / 100})` }}
+            />
+          </div>
+        </div>
+      </div>
+      <main
+        className={`${styles.main} ${loaderDone ? styles.mainVisible : styles.mainHidden}`}
+        style={{
+          opacity: loaderDone ? 1 : 0,
+          pointerEvents: loaderDone ? "auto" : "none",
+          transform: loaderDone ? "translateY(0)" : "translateY(10px)",
+        }}
+      >
         <h1 className={styles.srOnly}>Attention is currency</h1>
         <div className={styles.textBlock}>
           {prefersReducedMotion ? (
-            hasStarted ? (
+            hasStarted && loaderDone ? (
               <div className={styles.typed}>
                 {heroLines.flatMap((line, index) => {
                   const elements: ReactNode[] = [];
@@ -621,7 +767,7 @@ export default function Home() {
               className={styles.startButton}
               type="button"
               onClick={handleStart}
-              disabled={hasStarted}
+              disabled={hasStarted || !loaderDone}
             >
               start the journey
             </button>

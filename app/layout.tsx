@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Roboto_Mono } from "next/font/google";
 import "./globals.css";
 
 const siteUrl = "https://jonasknppel.me";
@@ -10,6 +10,13 @@ const siteDescription =
 const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
+  display: "swap",
+});
+
+const robotoMono = Roboto_Mono({
+  variable: "--font-mono",
+  subsets: ["latin"],
+  weight: ["500"],
   display: "swap",
 });
 
@@ -74,7 +81,6 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   const personJsonLd = {
-    "@context": "https://schema.org",
     "@type": "Person",
     name: "Jonas Knüppel",
     url: siteUrl,
@@ -98,7 +104,6 @@ export default function RootLayout({
   };
 
   const websiteJsonLd = {
-    "@context": "https://schema.org",
     "@type": "WebSite",
     name: siteTitle,
     url: siteUrl,
@@ -110,11 +115,22 @@ export default function RootLayout({
     },
   };
 
-  const structuredData = [personJsonLd, websiteJsonLd];
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@graph": [personJsonLd, websiteJsonLd],
+  };
 
   return (
-    <html lang="en">
-      <body className={inter.variable}>
+    <html lang="en" style={{ backgroundColor: "#020612", colorScheme: "dark" }}>
+      <body
+        className={`${inter.variable} ${robotoMono.variable}`}
+        style={{
+          margin: 0,
+          backgroundColor: "#020612",
+          color: "#f4f1ec",
+          minHeight: "100vh",
+        }}
+      >
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
