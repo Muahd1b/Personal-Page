@@ -203,10 +203,11 @@ export default function Home() {
   useEffect(() => {
     if (loaderPhase !== "loading") return;
 
-    const MIN_DURATION = prefersReducedMotion ? 480 : 1100;
-    const SOFT_DURATION = prefersReducedMotion ? 900 : 2600;
+    const MIN_DURATION = prefersReducedMotion ? 650 : 1400;
+    const SOFT_DURATION = prefersReducedMotion ? 1400 : 3800;
     const HARD_TIMEOUT = 8000;
     const startedAt = performance.now();
+    let lastFrame = startedAt;
     let raf = 0;
     let hardTimeout = 0;
     let cancelled = false;
@@ -271,23 +272,35 @@ export default function Home() {
     const renderProgress = () => {
       if (cancelled) return;
 
-      const elapsed = performance.now() - startedAt;
+      const now = performance.now();
+      const elapsed = now - startedAt;
+      const deltaSeconds = Math.min((now - lastFrame) / 1000, 0.05);
+      lastFrame = now;
       if (elapsed >= MIN_DURATION) mark("min");
       const syntheticProgress = Math.min(95, (elapsed / SOFT_DURATION) * 95);
       const realProgress = computeRealProgress();
       const ready = isFullyReady();
       const target = ready ? 100 : Math.max(realProgress, syntheticProgress);
 
-      setDisplayProgress((previous) => {
-        const easing = ready ? 0.22 : 0.1;
-        let next = previous + (target - previous) * easing;
-        if (Math.abs(next - target) < 0.18) next = target;
-        next = Math.min(100, Math.max(0, next));
-        progressRef.current = next;
-        return next;
-      });
+      const speedPerSecond = ready
+        ? prefersReducedMotion
+          ? 140
+          : 58
+        : prefersReducedMotion
+          ? 90
+          : 22;
 
-      if (!transitioning && ready && progressRef.current >= 99.4) {
+      const current = progressRef.current;
+      const maxStep = speedPerSecond * deltaSeconds;
+      let next = current + Math.min(Math.max(0, target - current), maxStep);
+      if (!ready) next = Math.min(next, 95);
+      if (ready && 100 - next < 0.15) next = 100;
+      next = Math.min(100, Math.max(current, next));
+
+      progressRef.current = next;
+      setDisplayProgress(next);
+
+      if (!transitioning && ready && progressRef.current >= 99.6) {
         transitioning = true;
         setLoaderPhase("exiting");
         return;
@@ -319,7 +332,7 @@ export default function Home() {
     if (loaderPhase !== "exiting") return;
     const timer = window.setTimeout(
       () => setLoaderPhase("done"),
-      prefersReducedMotion ? 220 : 650,
+      prefersReducedMotion ? 260 : 900,
     );
     return () => window.clearTimeout(timer);
   }, [loaderPhase, prefersReducedMotion]);

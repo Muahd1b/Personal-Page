@@ -83,7 +83,8 @@
   transform-origin: bottom center;
   transform: scaleY(0);
   box-shadow: 0 0 10px rgba(244, 241, 236, 0.28);
-  transition: transform 0.16s linear;
+  will-change: transform;
+  transition: transform 0.34s cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 
 .loaderValue {
