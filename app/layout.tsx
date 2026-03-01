@@ -122,6 +122,10 @@ export default function RootLayout({
 
   return (
     <html lang="en" style={{ backgroundColor: "#020612", colorScheme: "dark" }}>
+      <head>
+        <meta name="theme-color" content="#020612" />
+        <style>{`html,body{background:#020612!important;color:#f4f1ec}`}</style>
+      </head>
       <body
         className={`${inter.variable} ${robotoMono.variable}`}
         style={{
