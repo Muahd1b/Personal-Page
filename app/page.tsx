@@ -193,7 +193,12 @@ export default function Home() {
     toggleAudio,
   } = useTypingAudio();
   const loaderDone = loaderPhase === "done";
+  const loaderDoneRef = useRef(loaderDone);
   const shouldType = loaderDone && hasStarted && !prefersReducedMotion;
+
+  useEffect(() => {
+    loaderDoneRef.current = loaderDone;
+  }, [loaderDone]);
 
   useEffect(() => {
     if (loaderPhase !== "loading") return;
@@ -495,7 +500,9 @@ export default function Home() {
       trailContext.fillStyle = `rgba(0, 0, 0, ${fadeAlpha})`;
       trailContext.fillRect(0, 0, trailCanvas.width, trailCanvas.height);
 
-      if (prefersReduced || interactionStrength < 0.015) return;
+      if (!loaderDoneRef.current || prefersReduced || interactionStrength < 0.015) {
+        return;
+      }
 
       const px = (pointer.x / width) * trailCanvas.width;
       const py = (1 - pointer.y / height) * trailCanvas.height;
@@ -552,9 +559,12 @@ export default function Home() {
       const interactionStrength = touchActive
         ? Math.max(pointer.speed, 0.055)
         : pointer.speed;
-      glowStrength = glowStrength * 0.92 + interactionStrength * 0.42;
+      const activeInteractionStrength = loaderDoneRef.current
+        ? interactionStrength
+        : 0;
+      glowStrength = glowStrength * 0.92 + activeInteractionStrength * 0.42;
 
-      updateTrail(interactionStrength);
+      updateTrail(activeInteractionStrength);
 
       gl.useProgram(program);
       gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
