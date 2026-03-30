@@ -1,11 +1,13 @@
 import type { Metadata } from "next";
 import { Inter, Roboto_Mono } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 
 const siteUrl = "https://jonasknppel.me";
 const siteTitle = "Attention is currency";
 const siteDescription =
   "Attention is currency. Jonas Knüppel builds digital persuasion and brand systems with Booked and Kernscale.";
+const gaMeasurementId = "G-VW07BRCCZ3";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -125,6 +127,18 @@ export default function RootLayout({
       <head>
         <meta name="theme-color" content="#020612" />
         <style>{`html,body{background:#020612!important;color:#f4f1ec}`}</style>
+        <Script
+          src={`https://www.googletagmanager.com/gtag/js?id=${gaMeasurementId}`}
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', '${gaMeasurementId}');
+          `}
+        </Script>
       </head>
       <body
         className={`${inter.variable} ${robotoMono.variable}`}
