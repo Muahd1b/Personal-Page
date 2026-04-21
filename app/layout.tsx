@@ -4,7 +4,8 @@ import Script from "next/script";
 import "./globals.css";
 
 const siteUrl = "https://jonasknppel.me";
-const siteTitle = "Attention is currency";
+const siteTitle = "Attention is currency | Jonas Knüppel";
+const siteName = "Attention is currency";
 const siteDescription =
   "Attention is currency. Jonas Knüppel builds digital persuasion and brand systems with Booked and Kernscale.";
 const gaMeasurementId = "G-VW07BRCCZ3";
@@ -26,10 +27,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: siteTitle,
   description: siteDescription,
-  applicationName: siteTitle,
-  alternates: {
-    canonical: "/",
-  },
+  applicationName: siteName,
   keywords: [
     "Jonas Knüppel",
     "attention is currency",
@@ -47,7 +45,7 @@ export const metadata: Metadata = {
     url: siteUrl,
     title: siteTitle,
     description: siteDescription,
-    siteName: siteTitle,
+    siteName,
     images: [
       {
         url: "/icon.png",
@@ -84,8 +82,10 @@ export default function RootLayout({
 }>) {
   const personJsonLd = {
     "@type": "Person",
+    "@id": `${siteUrl}/#person`,
     name: "Jonas Knüppel",
-    url: siteUrl,
+    url: `${siteUrl}/`,
+    image: `${siteUrl}/icon.png`,
     sameAs: [
       "https://www.instagram.com/jonasknppel/",
       "https://x.com/Knaviation_og",
@@ -94,11 +94,13 @@ export default function RootLayout({
     worksFor: [
       {
         "@type": "Organization",
+        "@id": "https://bookedin4u.com/#organization",
         name: "Booked",
         url: "https://bookedin4u.com/",
       },
       {
         "@type": "Organization",
+        "@id": "https://www.kernscale.de/#organization",
         name: "Kernscale",
         url: "https://www.kernscale.de/",
       },
@@ -107,13 +109,13 @@ export default function RootLayout({
 
   const websiteJsonLd = {
     "@type": "WebSite",
-    name: siteTitle,
-    url: siteUrl,
+    "@id": `${siteUrl}/#website`,
+    name: siteName,
+    url: `${siteUrl}/`,
     inLanguage: "en",
     description: siteDescription,
     publisher: {
-      "@type": "Person",
-      name: "Jonas Knüppel",
+      "@id": `${siteUrl}/#person`,
     },
   };
 
@@ -125,6 +127,7 @@ export default function RootLayout({
   return (
     <html lang="en" style={{ backgroundColor: "#020612", colorScheme: "dark" }}>
       <head>
+        <link rel="canonical" href={`${siteUrl}/`} />
         <meta name="theme-color" content="#020612" />
         <style>{`html,body{background:#020612!important;color:#f4f1ec}`}</style>
         <Script
