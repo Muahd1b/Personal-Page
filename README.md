@@ -4,6 +4,7 @@ Single-page hero site built with Next.js + React. Inter typography, typed.js tex
 
 Status
 - Content is editable in `app/content.ts`.
+- The site is hosted on private hosting. GitHub Actions only verifies and packages the static export; it does not deploy to GitHub Pages.
 
 Features
 - Hero-only layout inspired by the provided reference image.
@@ -20,3 +21,7 @@ Docs
 Getting Started
 - `npm install`
 - `npm run dev`
+
+Deployment
+- `npm run build` generates the static site in `out/`.
+- Upload the contents of `out/` to the active hosting document root, including hidden files such as `.htaccess`.
