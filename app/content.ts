@@ -1,16 +1,16 @@
 export const heroContent = {
   intro: "hi, i'm jonas :)",
   lead: [
-    "i scale booked and kernscale, a collaboration, leading the",
-    "frontier in digital persuasion and innovative marketing",
+    "i scale kernscale, leading the frontier in digital persuasion",
+    "and innovative marketing, based on organic and generative intelligence",
   ],
   sections: [
     {
       title: "along the way we've",
       items: [
-        "build sustainable outreach and management systems",
+        "built sustainable outreach and management systems",
         "scaled digital appearance for several brands",
-        "initialised a global network of entrepreneurs",
+        "heralded a new era of artificial perception",
       ],
     },
     {
@@ -24,10 +24,6 @@ export const heroContent = {
   ],
   meta: "born: neubrandenburg / raised: germany / currently: school",
   links: [
-    {
-      label: "booked",
-      href: "https://bookedin4u.com/",
-    },
     {
       label: "kernscale",
       href: "https://www.kernscale.de/",

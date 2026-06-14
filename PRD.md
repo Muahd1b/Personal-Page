@@ -5,7 +5,7 @@ Owner: Jonas Knappel
 Date: 2026-01-26
 
 ## 1) Overview
-Create a single-page Next.js + React hero site that presents a short personal intro. The aesthetic should be minimal and dark, inspired by the provided reference image. The primary text is revealed with a typed.js animation, accompanied by a subtle high-pitch "typewriter" sound per character. Social links include Instagram and X with hover effects.
+Create a single-page Next.js + React hero site that presents a short personal intro. The aesthetic should be minimal and dark, inspired by the provided reference image. The primary text is revealed with a typed.js animation, accompanied by a subtle high-pitch "typewriter" sound per character. Search appearance focuses on organic intelligence, generative intelligence, artificial perception, Kernscale, and digital persuasion. Social links include Instagram and X with hover effects.
 
 Content copy lives in a single module for easy updates without reworking layout or animation logic.
 

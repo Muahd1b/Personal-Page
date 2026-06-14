@@ -1,12 +1,19 @@
-# Attention is currency
+# Jonas Knüppel
 
-> Canonical profile and project links for Jonas Knüppel.
+> Canonical profile and project links for Jonas Knüppel. The public homepage focuses on digital persuasion, organic and generative intelligence, innovative marketing, and artificial perception.
 
 ## Core pages
-- [Homepage](https://jonasknppel.me/): Jonas Knüppel's personal site and profile.
+- [Homepage](https://jonasknppel.me/): Jonas Knüppel's personal profile and canonical homepage.
 
 ## Related entities
-- [Kernscale](https://www.kernscale.de/): Brand and digital appearance systems.
+- [Kernscale](https://www.kernscale.de/): Digital persuasion, brand systems, and innovative marketing.
+
+## Topic focus
+- Organic intelligence
+- Generative intelligence
+- Artificial perception
+- Digital persuasion
+- Brand systems
 
 ## Social profiles
 - [Instagram](https://www.instagram.com/jonasknppel/): Jonas Knüppel on Instagram.

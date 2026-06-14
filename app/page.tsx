@@ -733,7 +733,9 @@ export default function Home() {
           transform: loaderDone ? "translateY(0)" : "translateY(10px)",
         }}
       >
-        <h1 className={styles.srOnly}>Attention is currency</h1>
+        <h1 className={styles.srOnly}>
+          Jonas Knüppel: organic and generative intelligence for artificial perception
+        </h1>
         <div className={styles.textBlock}>
           {prefersReducedMotion ? (
             hasStarted && loaderDone ? (

@@ -2,14 +2,22 @@ import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import { Inter, Roboto_Mono } from "next/font/google";
 import Script from "next/script";
+import TabTitleMessage from "./TabTitleMessage";
 import "./globals.css";
 
 const siteUrl = "https://jonasknppel.me";
-const siteTitle = "Attention is currency | Jonas Knüppel";
-const siteName = "Attention is currency";
+const siteTitle = "Jonas Knüppel | Organic & Generative Intelligence";
+const siteName = "Jonas Knüppel";
 const siteDescription =
-  "Attention is currency. Jonas Knüppel builds digital persuasion and brand systems with Kernscale.";
+  "Jonas Knüppel builds Kernscale at the frontier of digital persuasion, organic and generative intelligence, and artificial perception.";
+const previewImage = "/icon.png";
 const gaMeasurementId = "G-VW07BRCCZ3";
+const tabHiddenTitles = [
+  "Attention is currency.",
+  "Jonas heralds a new era of persuasion.",
+  "Kernscale keeps moving.",
+  "Come back before the market scrolls away.",
+];
 
 const inter = Inter({
   variable: "--font-inter",
@@ -26,15 +34,20 @@ const robotoMono = Roboto_Mono({
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
+  title: siteTitle,
   description: siteDescription,
   applicationName: siteName,
   keywords: [
     "Jonas Knüppel",
     "attention is currency",
     "Kernscale",
+    "organic intelligence",
+    "generative intelligence",
+    "artificial perception",
     "digital marketing",
     "branding",
     "digital persuasion",
+    "innovative marketing",
   ],
   authors: [{ name: "Jonas Knüppel", url: siteUrl }],
   creator: "Jonas Knüppel",
@@ -47,10 +60,10 @@ export const metadata: Metadata = {
     siteName,
     images: [
       {
-        url: "/icon.png",
+        url: previewImage,
         width: 512,
         height: 512,
-        alt: "Attention is currency preview",
+        alt: "Jonas Knüppel personal website preview",
       },
     ],
     locale: "en_US",
@@ -59,7 +72,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: siteTitle,
     description: siteDescription,
-    images: ["/icon.png"],
+    images: [previewImage],
   },
   robots: {
     index: true,
@@ -90,6 +103,15 @@ export default function RootLayout({
       "https://x.com/Knaviation_og",
     ],
     jobTitle: "Digital Marketing and Brand Strategy",
+    description: siteDescription,
+    knowsAbout: [
+      "organic intelligence",
+      "generative intelligence",
+      "artificial perception",
+      "digital persuasion",
+      "innovative marketing",
+      "brand systems",
+    ],
     worksFor: [
       {
         "@type": "Organization",
@@ -112,9 +134,38 @@ export default function RootLayout({
     },
   };
 
+  const webPageJsonLd = {
+    "@type": "ProfilePage",
+    "@id": `${siteUrl}/#webpage`,
+    url: `${siteUrl}/`,
+    name: siteTitle,
+    description: siteDescription,
+    inLanguage: "en",
+    isPartOf: {
+      "@id": `${siteUrl}/#website`,
+    },
+    mainEntity: {
+      "@id": `${siteUrl}/#person`,
+    },
+    about: [
+      {
+        "@type": "Thing",
+        name: "Organic intelligence",
+      },
+      {
+        "@type": "Thing",
+        name: "Generative intelligence",
+      },
+      {
+        "@type": "Thing",
+        name: "Artificial perception",
+      },
+    ],
+  };
+
   const structuredData = {
     "@context": "https://schema.org",
-    "@graph": [personJsonLd, websiteJsonLd],
+    "@graph": [personJsonLd, websiteJsonLd, webPageJsonLd],
   };
 
   return (
@@ -150,6 +201,7 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
         />
+        <TabTitleMessage hiddenTitles={tabHiddenTitles} />
         {children}
       </body>
     </html>

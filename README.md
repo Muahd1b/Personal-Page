@@ -1,6 +1,6 @@
 Attention is currency
 
-Single-page hero site built with Next.js + React. Inter typography, typed.js text reveal with audio, and hover effects on social links.
+Single-page hero site built with Next.js + React. Inter typography, typed.js text reveal with audio, SEO metadata focused on organic and generative intelligence, and hover effects on social links.
 
 Status
 - Content is editable in `app/content.ts`.
