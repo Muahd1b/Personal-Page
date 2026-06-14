@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import type { ReactNode } from "react";
 import { Inter, Roboto_Mono } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
@@ -7,7 +8,7 @@ const siteUrl = "https://jonasknppel.me";
 const siteTitle = "Attention is currency | Jonas Knüppel";
 const siteName = "Attention is currency";
 const siteDescription =
-  "Attention is currency. Jonas Knüppel builds digital persuasion and brand systems with Booked and Kernscale.";
+  "Attention is currency. Jonas Knüppel builds digital persuasion and brand systems with Kernscale.";
 const gaMeasurementId = "G-VW07BRCCZ3";
 
 const inter = Inter({
@@ -25,13 +26,11 @@ const robotoMono = Roboto_Mono({
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
-  title: siteTitle,
   description: siteDescription,
   applicationName: siteName,
   keywords: [
     "Jonas Knüppel",
     "attention is currency",
-    "Booked",
     "Kernscale",
     "digital marketing",
     "branding",
@@ -78,7 +77,7 @@ export const metadata: Metadata = {
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode;
+  children: ReactNode;
 }>) {
   const personJsonLd = {
     "@type": "Person",
@@ -92,12 +91,6 @@ export default function RootLayout({
     ],
     jobTitle: "Digital Marketing and Brand Strategy",
     worksFor: [
-      {
-        "@type": "Organization",
-        "@id": "https://bookedin4u.com/#organization",
-        name: "Booked",
-        url: "https://bookedin4u.com/",
-      },
       {
         "@type": "Organization",
         "@id": "https://www.kernscale.de/#organization",
@@ -127,6 +120,7 @@ export default function RootLayout({
   return (
     <html lang="en" style={{ backgroundColor: "#020612", colorScheme: "dark" }}>
       <head>
+        <title>{siteTitle}</title>
         <link rel="canonical" href={`${siteUrl}/`} />
         <meta name="theme-color" content="#020612" />
         <style>{`html,body{background:#020612!important;color:#f4f1ec}`}</style>

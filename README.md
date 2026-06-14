@@ -1,6 +1,6 @@
 Attention is currency
 
-Single-page hero site built with Next.js + React. Inter typography, typed.js text reveal with audio, an inline Booked link in the lead, and hover effects on social links.
+Single-page hero site built with Next.js + React. Inter typography, typed.js text reveal with audio, and hover effects on social links.
 
 Status
 - Content is editable in `app/content.ts`.
@@ -11,7 +11,7 @@ Features
 - Typed.js text animation for the intro and supporting lines.
 - "Start the journey" button to begin the typing + audio.
 - High-pitch "typewriter" beep on each character (user-initiated audio).
-- Hover effects for Instagram, Booked, and X links.
+- Hover effects for Instagram and X links.
 - PNG favicon sourced from `Favicon/Design ohne Titel.png`.
 
 Docs

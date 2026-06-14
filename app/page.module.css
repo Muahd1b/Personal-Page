@@ -1,7 +1,6 @@
 .page {
   position: relative;
   isolation: isolate;
-  min-height: 100vh;
   min-height: 100dvh;
   display: flex;
   align-items: center;
@@ -86,17 +85,6 @@
   transition: transform 0.34s cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 
-.loaderValue {
-  min-width: 4ch;
-  text-align: center;
-  color: rgba(244, 241, 236, 0.92);
-  font-family: var(--font-mono), "Roboto Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
-  font-size: clamp(20px, 2.2vw, 30px);
-  line-height: 1;
-  letter-spacing: 0.02em;
-  font-weight: 500;
-}
-
 .textBlock {
   width: 100%;
   position: relative;
@@ -109,7 +97,7 @@
   display: inline;
 }
 
-.intro {
+.typed [data-line-type="intro"] {
   display: inline;
   font-size: 28px;
   line-height: 1.4;
@@ -117,25 +105,34 @@
   color: var(--text-primary);
 }
 
-.line {
+.typed [data-line-type="line"] {
   display: inline;
 }
 
-.sectionTitle {
+.typed [data-line-type="sectionTitle"] {
   display: inline;
   font-weight: 500;
   color: var(--text-primary);
 }
 
-.bullet {
+.typed [data-line-type="bullet"] {
   display: inline;
   margin-left: 12px;
 }
 
-.meta {
+.typed [data-line-type="meta"] {
   display: inline;
   font-size: 14px;
   color: var(--text-dim);
+}
+
+.typedCursor {
+  color: var(--text-primary);
+  opacity: 0.6;
+  display: inline-block;
+  margin-left: 2px;
+  vertical-align: baseline;
+  animation: typed-blink 1s infinite;
 }
 
 .footer {
@@ -266,12 +263,8 @@
     font-size: 15px;
   }
 
-  .intro {
+  .typed [data-line-type="intro"] {
     font-size: 22px;
-  }
-
-  .loaderValue {
-    font-size: clamp(18px, 7vw, 24px);
   }
 
   .loaderLineTrack {
@@ -291,18 +284,6 @@
   border: 0;
 }
 
-:global(.typed-cursor) {
-  color: var(--text-primary);
-  opacity: 0.6;
-  display: inline-block;
-  margin-left: 2px;
-  vertical-align: baseline;
-}
-
-:global(.typed-cursor--blink) {
-  animation: typed-blink 1s infinite;
-}
-
 @keyframes typed-blink {
   0%,
   100% {
@@ -313,7 +294,7 @@
   }
 }
 @media (max-width: 720px) {
-  .bullet {
+  .typed [data-line-type="bullet"] {
     margin-left: 0;
   }
 }

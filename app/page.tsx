@@ -6,7 +6,6 @@ import styles from "./page.module.css";
 import { heroContent, heroPlainText } from "./content";
 
 type LineType = "intro" | "line" | "sectionTitle" | "bullet" | "meta" | "spacer";
-type RenderLineType = Exclude<LineType, "spacer">;
 type LoaderPhase = "loading" | "exiting" | "done";
 
 type Line = {
@@ -32,31 +31,19 @@ heroContent.sections.forEach((section) => {
 heroLines.push(makeLine("spacer"));
 heroLines.push(makeLine("meta", heroContent.meta));
 
-const classMap: Record<RenderLineType, string> = {
-  intro: styles.intro,
-  line: styles.line,
-  sectionTitle: styles.sectionTitle,
-  bullet: styles.bullet,
-  meta: styles.meta,
-};
-
-const buildTypedMarkup = (
-  lines: Line[],
-  classes: typeof classMap,
-) =>
+const buildTypedMarkup = (lines: Line[]) =>
   lines
     .map((line, index) => {
       const content =
         line.type === "spacer"
           ? ""
-          : `<span class="${classes[line.type]}">${line.text ?? ""}</span>`;
+          : `<span data-line-type="${line.type}">${line.text ?? ""}</span>`;
       const needsBreak = index < lines.length - 1;
       return `${content}${needsBreak ? "<br/>" : ""}`;
     })
     .join("");
 
-const heroClassNames = classMap;
-const typedMarkup = buildTypedMarkup(heroLines, heroClassNames);
+const typedMarkup = buildTypedMarkup(heroLines);
 
 const usePrefersReducedMotion = () => {
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
@@ -66,13 +53,8 @@ const usePrefersReducedMotion = () => {
     const updatePreference = () => setPrefersReducedMotion(mediaQuery.matches);
     updatePreference();
 
-    if (mediaQuery.addEventListener) {
-      mediaQuery.addEventListener("change", updatePreference);
-      return () => mediaQuery.removeEventListener("change", updatePreference);
-    }
-
-    mediaQuery.addListener(updatePreference);
-    return () => mediaQuery.removeListener(updatePreference);
+    mediaQuery.addEventListener("change", updatePreference);
+    return () => mediaQuery.removeEventListener("change", updatePreference);
   }, []);
 
   return prefersReducedMotion;
@@ -111,7 +93,7 @@ const useTypingAudio = () => {
     }
 
     audioContextRef.current = new AudioContextConstructor();
-    audioContextRef.current.resume?.();
+    void audioContextRef.current.resume?.();
     audioReadyRef.current = true;
     setAudioReady(true);
     setAudioSupported(true);
@@ -125,7 +107,7 @@ const useTypingAudio = () => {
       return false;
     }
     if (audioContextRef.current?.state === "suspended") {
-      audioContextRef.current.resume();
+      void audioContextRef.current.resume();
     }
     setAudioEnabled(true);
     return true;
@@ -686,7 +668,7 @@ export default function Home() {
       typeSpeed: 34,
       startDelay: 200,
       contentType: "html",
-      showCursor: true,
+      showCursor: false,
       smartBackspace: false,
       loop: false,
     });
@@ -759,9 +741,8 @@ export default function Home() {
                 {heroLines.flatMap((line, index) => {
                   const elements: ReactNode[] = [];
                   if (line.type !== "spacer") {
-                    const className = heroClassNames[line.type];
                     elements.push(
-                      <span key={`${line.type}-${index}`} className={className}>
+                      <span key={`${line.type}-${index}`} data-line-type={line.type}>
                         {line.text}
                       </span>,
                     );
@@ -780,6 +761,7 @@ export default function Home() {
                 className={styles.typed}
                 aria-hidden="true"
               ></span>
+              {shouldType ? <span className={styles.typedCursor} aria-hidden="true">|</span> : null}
               <p className={styles.srOnly}>{heroPlainText}</p>
             </>
           )}

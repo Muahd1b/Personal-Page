@@ -5,7 +5,7 @@ Owner: Jonas Knappel
 Date: 2026-01-26
 
 ## 1) Overview
-Create a single-page Next.js + React hero site that presents a short personal intro. The aesthetic should be minimal and dark, inspired by the provided reference image. The primary text is revealed with a typed.js animation, accompanied by a subtle high-pitch "typewriter" sound per character. Social links include Instagram, Booked, and X with hover effects.
+Create a single-page Next.js + React hero site that presents a short personal intro. The aesthetic should be minimal and dark, inspired by the provided reference image. The primary text is revealed with a typed.js animation, accompanied by a subtle high-pitch "typewriter" sound per character. Social links include Instagram and X with hover effects.
 
 Content copy lives in a single module for easy updates without reworking layout or animation logic.
 
@@ -45,10 +45,10 @@ Content copy lives in a single module for easy updates without reworking layout 
    - Audio starts only after explicit user interaction (e.g., first click/keypress).
    - Provide a mute toggle or respect browser autoplay restrictions.
 6. Social links:
-   - Instagram, Booked, X.
+   - Instagram, X.
    - Hover effects with a subtle glow/underline/shift.
 7. Inline lead link:
-   - The word "booked" in the lead text is a clickable link with the same hover effect as other links.
+   - Social links use the same hover effect.
 8. Typography:
    - Inter as the primary font.
 9. Responsive design:
@@ -91,5 +91,5 @@ Content copy lives in a single module for easy updates without reworking layout 
 2. Implement typed.js effect. (done)
 3. Implement audio feedback with mute/interaction gating. (done)
 4. Add "Start the journey" trigger. (done)
-5. Add inline Booked link styling in lead. (done)
+5. Add social link hover styling. (done)
 6. Set PNG favicon. (done)
