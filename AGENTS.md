@@ -36,3 +36,17 @@ This file is vendor-neutral and intended to work across multiple agent tools.
   - `/Users/jonasknppel/.codex/agent-fabric/scripts/ack-issue-orchestration.sh <run_id> "ack execute|ack release"`
 - Evaluate policy guardrails:
   - `/Users/jonasknppel/.codex/agent-fabric/scripts/evaluate-guardrails.sh [--risk <low|medium|high|critical>]`
+
+## Agent skills
+
+### Issue tracker
+
+Issues and PRDs are tracked in GitHub Issues; external pull requests are not a triage surface. See `docs/agents/issue-tracker.md`.
+
+### Triage labels
+
+Use the canonical labels `needs-triage`, `needs-info`, `ready-for-agent`, `ready-for-human`, and `wontfix`. See `docs/agents/triage-labels.md`.
+
+### Domain docs
+
+This is a single-context repository with domain context in `CONTEXT.md` and architectural decisions under `docs/adr/`. See `docs/agents/domain.md`.
