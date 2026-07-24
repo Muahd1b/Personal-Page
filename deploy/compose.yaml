@@ -1,0 +1,65 @@
+name: personal-page
+
+services:
+  app:
+    image: "${PERSONAL_PAGE_IMAGE:?Set PERSONAL_PAGE_IMAGE to an approved immutable GHCR digest}"
+    restart: unless-stopped
+    init: true
+    cpus: 1.0
+    mem_limit: 512m
+    mem_reservation: 128m
+    pids_limit: 128
+    stop_grace_period: 20s
+    environment:
+      HOSTNAME: 0.0.0.0
+      NEXT_TELEMETRY_DISABLED: "1"
+      NODE_ENV: production
+      PORT: "3000"
+    read_only: true
+    tmpfs:
+      - /tmp:size=32m,mode=1777
+      - /app/.next/cache:size=64m,uid=10001,gid=10001,mode=0750
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    healthcheck:
+      test:
+        - CMD
+        - node
+        - -e
+        - >-
+          fetch('http://127.0.0.1:3000/api/health').then((response) => {
+            if (!response.ok) process.exit(1);
+          }).catch(() => process.exit(1));
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+    networks:
+      - edge
+    labels:
+      traefik.enable: "true"
+      kernscale.proxy: "true"
+      traefik.http.routers.personal-page.rule: "Host(`jonasknppel.me`)"
+      traefik.http.routers.personal-page.entrypoints: "web"
+      traefik.http.routers.personal-page.middlewares: "compression@file,baseline-security-headers@file"
+      traefik.http.routers.personal-page.service: "personal-page"
+      traefik.http.routers.personal-page-www.rule: "Host(`www.jonasknppel.me`)"
+      traefik.http.routers.personal-page-www.entrypoints: "web"
+      traefik.http.routers.personal-page-www.middlewares: "personal-page-www-redirect"
+      traefik.http.routers.personal-page-www.service: "personal-page"
+      traefik.http.middlewares.personal-page-www-redirect.redirectregex.regex: "^https?://www\\.jonasknppel\\.me/(.*)"
+      traefik.http.middlewares.personal-page-www-redirect.redirectregex.replacement: "https://jonasknppel.me/$${1}"
+      traefik.http.middlewares.personal-page-www-redirect.redirectregex.permanent: "true"
+      traefik.http.services.personal-page.loadbalancer.server.port: "3000"
+    logging:
+      driver: local
+      options:
+        max-size: 10m
+        max-file: "5"
+
+networks:
+  edge:
+    name: kernscale-edge
+    external: true

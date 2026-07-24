@@ -1,8 +1,10 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  output: 'export',
-  basePath: '', // Empty for custom domain (CNAME)
+  output: "standalone",
+  experimental: {
+    serverSourceMaps: false,
+  },
   images: {
     unoptimized: true,
   },
