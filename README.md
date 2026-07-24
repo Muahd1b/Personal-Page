@@ -4,7 +4,10 @@ Single-page hero site built with Next.js + React. Inter typography, typed.js tex
 
 Status
 - Content is editable in `app/content.ts`.
-- The site is hosted on private hosting. GitHub Actions only verifies and packages the static export; it does not deploy to GitHub Pages.
+- The current public site remains on private hosting until the reviewed
+  Kernscale release is approved.
+- Production is prepared as an isolated Next.js standalone service behind
+  Cloudflare Tunnel and Traefik.
 
 Features
 - Hero-only layout inspired by the provided reference image.
@@ -23,5 +26,9 @@ Getting Started
 - `npm run dev`
 
 Deployment
-- `npm run build` generates the static site in `out/`.
-- Upload the contents of `out/` to the active hosting document root, including hidden files such as `.htaccess`.
+- `npm run build` generates the Next.js standalone runtime.
+- `docker build -t personal-page:local .` builds the production image.
+- Production uses an immutable `ghcr.io/muahd1b/personal-page@sha256:...`
+  release identity; mutable tags such as `latest` are not deployed.
+- See `deploy/README.md` for the Compose, health-check, verification, backup,
+  and rollback contract.
