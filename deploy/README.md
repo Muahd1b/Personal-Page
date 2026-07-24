@@ -24,6 +24,7 @@ Host header to Traefik, which routes only the two declared hostnames.
 /srv/kernscale/apps/personal-page/
 ├── bin/
 │   ├── deploy.sh
+│   ├── ci-command.sh
 │   ├── rollback.sh
 │   └── verify.sh
 ├── compose.yaml
@@ -57,6 +58,20 @@ The Tailscale service identity must receive only `tag:github-deploy`, and the
 tailnet policy must permit that tag to reach TCP port `22` on
 `kernscale-rs2000`. Require a human reviewer on the GitHub `production`
 environment.
+
+Install the CI public key with a forced command and OpenSSH's `restrict`
+option:
+
+```text
+restrict,command="/srv/kernscale/apps/personal-page/bin/ci-command.sh" ssh-ed25519 <public-key> github-personal-page-production
+```
+
+The forced command accepts only
+`deploy <immutable-personal-page-image> <full-commit-sha> <actor>`. It rejects
+shell access, port forwarding, PTYs, file transfer, other repositories, mutable
+tags, and extra arguments. Installing or updating the Compose contract and
+release scripts remains a separate, operator-reviewed server operation; the CI
+identity cannot modify its own deployment tooling.
 
 ## Pre-release
 
