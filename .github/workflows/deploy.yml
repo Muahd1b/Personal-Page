@@ -1,0 +1,80 @@
+name: Deploy production
+
+on:
+  workflow_dispatch:
+    inputs:
+      image_digest:
+        description: Immutable GHCR sha256 digest
+        required: true
+        type: string
+      commit_sha:
+        description: Full trusted main commit SHA represented by the image
+        required: true
+        type: string
+
+permissions:
+  contents: read
+  id-token: write
+
+concurrency:
+  group: personal-page-production
+  cancel-in-progress: false
+
+env:
+  DEPLOY_HOST: 100.81.138.90
+  DEPLOY_USER: deploy
+  IMAGE_NAME: ghcr.io/muahd1b/personal-page
+
+jobs:
+  deploy:
+    name: Deploy approved digest
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment:
+      name: production
+      url: https://jonasknppel.me
+    steps:
+      - name: Check out trusted deployment contract
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+
+      - name: Validate release identity
+        env:
+          COMMIT_SHA: ${{ inputs.commit_sha }}
+          IMAGE_DIGEST: ${{ inputs.image_digest }}
+        run: |
+          [[ "$COMMIT_SHA" =~ ^[0-9a-f]{40}$ ]]
+          [[ "$IMAGE_DIGEST" =~ ^sha256:[0-9a-f]{64}$ ]]
+          [[ "$GITHUB_REF" == "refs/heads/main" ]]
+          [[ "$COMMIT_SHA" == "$GITHUB_SHA" ]]
+
+      - name: Join the production tailnet
+        uses: tailscale/github-action@306e68a486fd2350f2bfc3b19fcd143891a4a2d8 # v4
+        with:
+          oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
+          audience: ${{ secrets.TS_AUDIENCE }}
+          tags: tag:github-deploy
+          ping: ${{ env.DEPLOY_HOST }}
+
+      - name: Install restricted SSH identity
+        env:
+          DEPLOY_SSH_KNOWN_HOSTS: ${{ secrets.DEPLOY_SSH_KNOWN_HOSTS }}
+          DEPLOY_SSH_PRIVATE_KEY: ${{ secrets.DEPLOY_SSH_PRIVATE_KEY }}
+        run: |
+          install -d -m 700 "$HOME/.ssh"
+          printf '%s\n' "$DEPLOY_SSH_PRIVATE_KEY" >"$HOME/.ssh/deploy"
+          printf '%s\n' "$DEPLOY_SSH_KNOWN_HOSTS" >"$HOME/.ssh/known_hosts"
+          chmod 600 "$HOME/.ssh/deploy" "$HOME/.ssh/known_hosts"
+
+      - name: Deploy and verify immutable image
+        env:
+          COMMIT_SHA: ${{ inputs.commit_sha }}
+          IMAGE_DIGEST: ${{ inputs.image_digest }}
+        run: |
+          ssh -i "$HOME/.ssh/deploy" -o BatchMode=yes -o IdentitiesOnly=yes \
+            -o StrictHostKeyChecking=yes "${DEPLOY_USER}@${DEPLOY_HOST}" \
+            "deploy ${IMAGE_NAME}@${IMAGE_DIGEST} ${COMMIT_SHA} ${GITHUB_ACTOR}"
+
+      - name: Verify public route
+        run: |
+          curl --fail --silent --show-error --max-time 15 https://jonasknppel.me/api/health
+          curl --fail --silent --show-error --max-time 15 --output /dev/null https://jonasknppel.me/
