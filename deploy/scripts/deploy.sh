@@ -113,7 +113,9 @@ image_commit=$(docker image inspect --format '{{index .Config.Labels "org.openco
   exit 1
 }
 
-install -m 640 "$compose_source" "${app_dir}/compose.yaml"
+if [[ "$compose_source" != "${app_dir}/compose.yaml" ]]; then
+  install -m 640 "$compose_source" "${app_dir}/compose.yaml"
+fi
 install -m 600 "$candidate_image" "${app_dir}/image.env"
 promoted=true
 rm -f "$staged_compose"
