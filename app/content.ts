@@ -22,7 +22,7 @@ export const heroContent = {
       ],
     },
   ],
-  meta: "born: neubrandenburg / raised: germany / currently: school",
+  meta: "born: neubrandenburg / raised: germany / currently: self-employed",
   links: [
     {
       label: "kernscale",
