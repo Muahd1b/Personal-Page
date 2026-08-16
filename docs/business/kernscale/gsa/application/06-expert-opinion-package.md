@@ -16,14 +16,13 @@ Die fachkundige Stelle wird ausdrücklich gebeten, die Bewertung eigenständig v
 
 ## 2. Erbetene fachliche Prüfung
 
-Die Stellungnahme sollte insbesondere beantworten:
+Nach dem aktuellen GSA-Merkblatt vom 08.07.2026 sollte die kurze Stellungnahme auf drei Themenblöcke konzentriert sein:
 
-1. Welchem fachlichen und technischen Stand ist das Vorhaben zuzuordnen?
-2. Welche regionalen und überregionalen Vergleichsangebote bestehen bereits?
-3. Worin liegt gegenüber diesen Angeboten die beabsichtigte Weiterentwicklung oder besondere Kombination?
-4. Ist der Entwicklungsgegenstand technisch nachvollziehbar und von der vorhandenen Vorleistung abgrenzbar?
-5. Welche wesentlichen technischen, datenbezogenen und wirtschaftlichen Risiken bestehen?
-6. Welches Wachstums-, Transfer- und Beschäftigungspotenzial ist bei erfolgreicher Umsetzung plausibel?
+1. **Stand der Technik und Wettbewerb:** Einordnung des Produkts und seines Innovationsgehalts anhand vergleichbarer regionaler und überregionaler Angebote, technischer Lösungen, Funktionseigenschaften oder Leistungsparameter.
+2. **Abgrenzung und Verbesserung:** Unterschiede zum Stand der Technik, erwartete wesentliche Branchenverbesserungen, Synergien mit bestehenden Technologien und ergänzende Innovationen.
+3. **Risiken und Wirkung:** technische Entwicklungsrisiken sowie erwartete Wachstums- und Beschäftigungseffekte.
+
+Die Stellungnahme soll nicht das gesamte Vorhaben oder die Gründerpersonen bewerten. Die fachkundige Einrichtung muss als Absender und die fachkundige Person namentlich als Verfasser erscheinen. Quelle: [GSA-Merkblatt zur fachlichen Stellungnahme, Stand 08.07.2026](https://www.gsa-schwerin.de/sites/default/files/2026-07/pd2i-merkblatt-fachliche-stellungnahme-gruendungsstipendien-ab-08072026.pdf).
 
 ## 3. Vorhaben in Kürze
 
@@ -134,6 +133,8 @@ Der Markteintritt soll über bestehende Dienstleistungskompetenz, direkte Bezieh
 
 ## 10. Gründerteam und Umsetzungsfähigkeit
 
+Die folgenden Angaben dienen nur dem Verständnis der vorhandenen Kompetenzen. Sie sind nicht Gegenstand der von der GSA verlangten fachlichen Innovationsbewertung.
+
 Jonas Knüppel und Linus Kern bauen die Kernscale UG (haftungsbeschränkt) i. G. gemeinsam auf. Beide sind zu jeweils 50 Prozent beteiligt und Geschäftsführer.
 
 **Jonas Knüppel** verantwortet technische Architektur, Produktentwicklung, Dashboard und Benutzeroberfläche, Datenintegrationen, Kontext- und Wissensstrukturen sowie KI-gestützte Analyse- und Generierungsworkflows. In bisherigen Kundenprojekten übernahm er Analyse, Strategie, Design, Programmierung und Projektleitung.
@@ -162,11 +163,14 @@ Jonas Knüppel und Linus Kern bauen die Kernscale UG (haftungsbeschränkt) i. G.
 > [Name und Funktion der fachkundigen Person]  
 > [Einrichtung, Unterschrift und gegebenenfalls Stempel]
 
-## 12. Kontakt-E-Mail an eine fachkundige Einrichtung
+## 12. Kontakt-E-Mail an KI MV / Universität Rostock
+
+**Empfänger:** Emil Löffler, Koordinator KI MV, emil.loeffler@uni-rostock.de
+**Rolle der Anfrage:** Bitte um institutionelle Übernahme oder Vermittlung an eine geeignete wissenschaftliche Person; nicht die Annahme, dass Herr Löffler selbst die Stellungnahme verfasst.
 
 **Betreff:** Anfrage zur fachlichen Stellungnahme – Gründungsstipendium MV / Levial by Kernscale
 
-> Sehr geehrte Frau [Name] / Sehr geehrter Herr [Name],
+> Sehr geehrter Herr Löffler,
 >
 > ich bin Mitgründer und Geschäftsführer der Kernscale UG (haftungsbeschränkt) i. G. mit Sitz in Burg Stargard. Für das Juryverfahren zum Gründungsstipendium Mecklenburg-Vorpommern benötigen wir eine unabhängige fachliche Stellungnahme zum Innovationscharakter unseres Softwarevorhabens **Levial by Kernscale**.
 >
@@ -174,7 +178,7 @@ Jonas Knüppel und Linus Kern bauen die Kernscale UG (haftungsbeschränkt) i. G.
 >
 > Eine technische Grundlage ist bereits vorhanden, unter anderem mit getrennten Workspaces, Quellen- und Artefaktmodellen, Signalerkennung, menschlichen Prüfpfaden, Knowledge Base, Knowledge Graph, Empfehlungen und Decision Queue. Produktive Datenkonnektoren, kanalübergreifende KI-Analyse und der geschlossene Ergebnis- und Lernloop sind als Entwicklungsgegenstand klar davon abgegrenzt.
 >
-> Aufgrund Ihrer fachlichen Arbeit im Bereich [passenden Schwerpunkt einsetzen] möchten wir höflich anfragen, ob Sie oder eine geeignete Person Ihrer Einrichtung die fachliche Prüfung und Stellungnahme übernehmen könnten. Wir stellen dafür eine kompakte Prüfunterlage, eine Markt- und Wettbewerbsanalyse, eine codebasierte Produktbestandsaufnahme sowie auf Wunsch eine nicht vertrauliche Demonstration bereit. Ein Formulierungsentwurf liegt nur als Arbeitshilfe bei; die Bewertung soll selbstverständlich vollständig unabhängig erfolgen.
+> Da KI MV regionale Unternehmen berät und passende wissenschaftliche Kompetenzen vermittelt, möchten wir höflich anfragen, ob KI MV beziehungsweise die Universität Rostock diese fachliche Prüfung übernehmen oder uns an eine geeignete wissenschaftliche Person vermitteln könnte. Wir stellen dafür eine kompakte Prüfunterlage, eine Markt- und Wettbewerbsanalyse, eine codebasierte Produktbestandsaufnahme sowie auf Wunsch eine nicht vertrauliche Demonstration bereit. Ein Formulierungsentwurf liegt nur als Arbeitshilfe bei; die Bewertung soll selbstverständlich vollständig unabhängig erfolgen.
 >
 > Könnten Sie uns bitte mitteilen, ob eine solche Prüfung grundsätzlich möglich ist und welche Unterlagen beziehungsweise formalen Schritte Sie dafür benötigen?
 >
@@ -183,6 +187,31 @@ Jonas Knüppel und Linus Kern bauen die Kernscale UG (haftungsbeschränkt) i. G.
 > Mitgründer und Geschäftsführer  
 > Kernscale UG (haftungsbeschränkt) i. G.  
 > [Telefon]  
+> [E-Mail]
+
+### Alternative Kontakt-E-Mail an die IHK Neubrandenburg
+
+**Empfänger:** Holger Beyer, Industrie / Technologie / Umwelt, holger.beyer@neubrandenburg.ihk.de
+**Betreff:** Anfrage zur fachlichen Innovationsstellungnahme – Gründungsstipendium MV / Levial by Kernscale
+
+> Sehr geehrter Herr Beyer,
+>
+> für das Juryverfahren zum Gründungsstipendium Mecklenburg-Vorpommern benötigen wir eine unabhängige fachliche Stellungnahme zum Innovationscharakter unseres Softwarevorhabens **Levial by Kernscale**. Die IHK Neubrandenburg nennt fachliche Stellungnahmen sowie Technologie- und Innovationsberatung ausdrücklich als Leistung. Deshalb möchten wir anfragen, ob die IHK die GSA-konforme Innovationsbewertung übernehmen kann.
+>
+> Levial soll Medien-, Marketing- und freigegebene Leistungsdaten kleiner Unternehmen in einem geschützten Kunden-Workspace verbinden. Die vorhandene Softwarebasis umfasst bereits getrennte Workspaces, Quellen- und Artefaktmodelle, Signalerkennung, menschliche Prüfpfade, Knowledge Base, Empfehlungen und Decision Queue. Produktive Datenkonnektoren, kanalübergreifende KI-Analyse und der geschlossene Ergebnis- und Lernloop sind als noch zu entwickelnder Gegenstand klar abgegrenzt.
+>
+> Wir können eine kompakte Prüfunterlage, eine Markt- und Wettbewerbsanalyse, eine codebasierte Produktbestandsaufnahme und auf Wunsch eine nicht vertrauliche Demonstration bereitstellen. Könnten Sie uns bitte mitteilen, ob eine solche Stellungnahme durch die IHK möglich ist, ob ein technischer Fachpartner einbezogen werden sollte und welche Unterlagen oder formalen Schritte Sie benötigen?
+>
+> Mit freundlichen Grüßen
+>
+> Jonas Knüppel
+>
+> Mitgründer und Geschäftsführer
+>
+> Kernscale UG (haftungsbeschränkt) i. G.
+>
+> [Telefon]
+>
 > [E-Mail]
 
 ## 13. Vorgesehene Anlagen und Nachweise
