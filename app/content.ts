@@ -14,6 +14,14 @@ export const heroContent = {
       ],
     },
     {
+      title: "kernscale",
+      items: [
+        "co-found and manage the company",
+        "lead technical architecture and product development",
+        "turn attention into durable digital systems",
+      ],
+    },
+    {
       title: "some personal sidequests",
       items: [
         "iterated skills in designing and software development",
@@ -22,7 +30,12 @@ export const heroContent = {
       ],
     },
   ],
-  meta: "born: neubrandenburg / raised: germany / currently: self-employed",
+  meta:
+    "born: neubrandenburg / raised: germany / currently: co-founder & managing director / CTO at kernscale",
+  contact: {
+    label: "Discuss",
+    href: "mailto:info@jonasknppel.me",
+  },
   links: [
     {
       label: "kernscale",

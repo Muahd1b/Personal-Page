@@ -1,12 +1,16 @@
 # Jonas Knüppel
 
-> Canonical profile and project links for Jonas Knüppel. The public homepage focuses on digital persuasion, organic and generative intelligence, innovative marketing, and artificial perception.
+> Canonical profile and project links for Jonas Knüppel, co-founder, managing director, and CTO at Kernscale.
+
+Jonas leads technical architecture and product development at Kernscale and works on digital attention systems, web development, and digital persuasion.
 
 ## Core pages
 - [Homepage](https://jonasknppel.me/): Jonas Knüppel's personal profile and canonical homepage.
+- [Impressum](https://jonasknppel.me/impressum/): Legal provider information for the personal website.
+- [Datenschutzerklärung](https://jonasknppel.me/datenschutz/): Information about data processing and analytics consent.
 
 ## Related entities
-- [Kernscale](https://www.kernscale.de/): Digital persuasion, brand systems, and innovative marketing.
+- [Kernscale](https://www.kernscale.de/): The company Jonas co-founded and leads as managing director and CTO.
 
 ## Topic focus
 - Organic intelligence
@@ -14,7 +18,12 @@
 - Artificial perception
 - Digital persuasion
 - Brand systems
+- Technical architecture
+- Product development
 
 ## Social profiles
 - [Instagram](https://www.instagram.com/jonasknppel/): Jonas Knüppel on Instagram.
 - [X](https://x.com/Knaviation_og): Jonas Knüppel on X.
+
+## Contact
+- [Email Jonas](mailto:info@jonasknppel.me): Discuss a project or collaboration.

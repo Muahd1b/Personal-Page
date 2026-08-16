@@ -734,7 +734,7 @@ export default function Home() {
         }}
       >
         <h1 className={styles.srOnly}>
-          Jonas Knüppel: organic and generative intelligence for artificial perception
+          Jonas Knüppel: Co-Founder, Managing Director and CTO at Kernscale
         </h1>
         <div className={styles.textBlock}>
           {prefersReducedMotion ? (
@@ -780,7 +780,7 @@ export default function Home() {
             </button>
           </div>
           <button
-            className={styles.soundButton}
+            className={`${styles.controlButton} ${styles.soundButton}`}
             type="button"
             onClick={toggleAudio}
             data-sound-toggle="true"
@@ -791,19 +791,29 @@ export default function Home() {
           >
             sound {audioEnabled && audioReady ? "on" : "off"}
           </button>
-          <nav className={styles.links} aria-label="social links">
-            {heroContent.links.map((link) => (
-              <a
-                key={link.label}
-                className={styles.link}
-                href={link.href}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                {link.label}
-              </a>
-            ))}
+          <nav className={styles.links} aria-label="profile and contact links">
+            {heroContent.links.map((link) => {
+              const isExternal = link.href.startsWith("http");
+
+              return (
+                <a
+                  key={link.label}
+                  className={styles.link}
+                  href={link.href}
+                  target={isExternal ? "_blank" : undefined}
+                  rel={isExternal ? "noopener noreferrer" : undefined}
+                >
+                  {link.label}
+                </a>
+              );
+            })}
           </nav>
+          <a
+            className={`${styles.controlButton} ${styles.contactButton}`}
+            href={heroContent.contact.href}
+          >
+            {heroContent.contact.label}
+          </a>
         </div>
       </main>
     </div>

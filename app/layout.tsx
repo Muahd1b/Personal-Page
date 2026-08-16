@@ -1,17 +1,18 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import { Inter, Roboto_Mono } from "next/font/google";
-import Script from "next/script";
+import AnalyticsConsent from "./AnalyticsConsent";
 import TabTitleMessage from "./TabTitleMessage";
+import ConsentHead from "./consent/ConsentHead";
+import { consentConfig } from "./consent/config";
 import "./globals.css";
 
 const siteUrl = "https://jonasknppel.me";
-const siteTitle = "Jonas Knüppel | Organic & Generative Intelligence";
+const siteTitle = "Jonas Knüppel | Co-Founder, Managing Director & CTO at Kernscale";
 const siteName = "Jonas Knüppel";
 const siteDescription =
-  "Jonas Knüppel builds Kernscale at the frontier of digital persuasion, organic and generative intelligence, and artificial perception.";
-const previewImage = "/icon.png";
-const gaMeasurementId = "G-VW07BRCCZ3";
+  "Jonas Knüppel is co-founder, managing director and CTO at Kernscale, leading technical architecture, product development and digital attention systems.";
+const previewImage = "/opengraph-image";
 const tabHiddenTitles = [
   "Attention is currency.",
   "Jonas heralds a new era of persuasion.",
@@ -36,9 +37,14 @@ export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: siteTitle,
   description: siteDescription,
+  alternates: {
+    canonical: "/",
+  },
   applicationName: siteName,
   keywords: [
     "Jonas Knüppel",
+    "Kernscale CTO",
+    "Kernscale managing director",
     "attention is currency",
     "Kernscale",
     "organic intelligence",
@@ -61,9 +67,9 @@ export const metadata: Metadata = {
     images: [
       {
         url: previewImage,
-        width: 512,
-        height: 512,
-        alt: "Jonas Knüppel personal website preview",
+        width: 1200,
+        height: 630,
+        alt: "Jonas Knüppel — Co-Founder, Managing Director & CTO at Kernscale",
       },
     ],
     locale: "en_US",
@@ -102,7 +108,7 @@ export default function RootLayout({
       "https://www.instagram.com/jonasknppel/",
       "https://x.com/Knaviation_og",
     ],
-    jobTitle: "Digital Marketing and Brand Strategy",
+    jobTitle: "Co-Founder, Managing Director & CTO",
     description: siteDescription,
     knowsAbout: [
       "organic intelligence",
@@ -117,6 +123,7 @@ export default function RootLayout({
         "@type": "Organization",
         "@id": "https://www.kernscale.de/#organization",
         name: "Kernscale",
+        legalName: "Kernscale UG (haftungsbeschränkt) i. G.",
         url: "https://www.kernscale.de/",
       },
     ],
@@ -171,22 +178,9 @@ export default function RootLayout({
   return (
     <html lang="en" style={{ backgroundColor: "#020612", colorScheme: "dark" }}>
       <head>
-        <title>{siteTitle}</title>
-        <link rel="canonical" href={`${siteUrl}/`} />
         <meta name="theme-color" content="#020612" />
         <style>{`html,body{background:#020612!important;color:#f4f1ec}`}</style>
-        <Script
-          src={`https://www.googletagmanager.com/gtag/js?id=${gaMeasurementId}`}
-          strategy="afterInteractive"
-        />
-        <Script id="google-analytics" strategy="afterInteractive">
-          {`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', '${gaMeasurementId}');
-          `}
-        </Script>
+        <ConsentHead />
       </head>
       <body
         className={`${inter.variable} ${robotoMono.variable}`}
@@ -203,6 +197,7 @@ export default function RootLayout({
         />
         <TabTitleMessage hiddenTitles={tabHiddenTitles} />
         {children}
+        <AnalyticsConsent measurementId={consentConfig.measurementId} />
       </body>
     </html>
   );

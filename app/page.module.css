@@ -1,7 +1,9 @@
 .page {
   position: relative;
   isolation: isolate;
+  height: 100dvh;
   min-height: 100dvh;
+  overflow-y: auto;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -37,6 +39,10 @@
 .mainVisible {
   opacity: 1;
   transform: translateY(0);
+}
+
+.main:has(.startWrap[data-started="false"]) .textBlock {
+  display: none;
 }
 
 .loaderOverlay {
@@ -136,16 +142,18 @@
 }
 
 .footer {
+  width: 100%;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
+  justify-content: center;
   gap: 16px;
 }
 
 .startWrap {
   width: 100%;
   display: flex;
-  justify-content: flex-start;
+  justify-content: center;
   max-height: 64px;
   opacity: 1;
   transform: translateY(0);
@@ -211,16 +219,27 @@
   outline-offset: 4px;
 }
 
-.soundButton {
+.controlButton {
+  width: 108px;
+  height: 30px;
+  flex: 0 0 108px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   border: 1px solid var(--stroke);
   background: transparent;
   color: var(--text-muted);
   border-radius: 999px;
-  padding: 6px 14px;
-  font-size: 11px;
-  letter-spacing: 0.14em;
+  padding: 0 14px;
+  font-size: 10px;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   transition: border-color 0.2s ease, color 0.2s ease;
+}
+
+.controlButton:focus-visible {
+  outline: 1px solid var(--text-primary);
+  outline-offset: 4px;
 }
 
 .soundButton:disabled {
@@ -247,6 +266,11 @@
     border-color: rgba(255, 255, 255, 0.25);
   }
 
+  .contactButton:hover {
+    color: var(--text-primary);
+    border-color: rgba(255, 255, 255, 0.25);
+  }
+
   .startButton:hover {
     border-color: rgba(255, 255, 255, 0.25);
     color: var(--text-primary);
@@ -256,7 +280,9 @@
 
 @media (max-width: 720px) {
   .page {
+    height: auto;
     padding: 96px 20px;
+    overflow-y: visible;
   }
 
   .typed {
@@ -269,6 +295,17 @@
 
   .loaderLineTrack {
     height: min(44vh, 320px);
+  }
+}
+
+@media (max-height: 960px) and (min-width: 721px) {
+  .page {
+    align-items: flex-start;
+  }
+
+  .main:has(.startWrap[data-started="false"]) {
+    min-height: calc(100dvh - 240px);
+    justify-content: center;
   }
 }
 
