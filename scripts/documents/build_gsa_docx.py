@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
-"""Build the two Kernscale GSA Word working drafts from canonical Markdown."""
+"""Build the Kernscale GSA Word working drafts from canonical Markdown."""
 
 from __future__ import annotations
 
 import re
+import sys
 from pathlib import Path
 
 from docx import Document
@@ -254,12 +255,14 @@ def add_numbering(doc, kind):
     tabs = OxmlElement("w:tabs")
     tab = OxmlElement("w:tab")
     tab.set(qn("w:val"), "num")
-    tab.set(qn("w:pos"), "540")
+    list_left = "540" if kind == "bullet" else "720"
+    list_hanging = "280" if kind == "bullet" else "360"
+    tab.set(qn("w:pos"), list_left)
     tabs.append(tab)
     p_pr.append(tabs)
     ind = OxmlElement("w:ind")
-    ind.set(qn("w:left"), "540")
-    ind.set(qn("w:hanging"), "280")
+    ind.set(qn("w:left"), list_left)
+    ind.set(qn("w:hanging"), list_hanging)
     p_pr.append(ind)
     spacing = OxmlElement("w:spacing")
     spacing.set(qn("w:after"), "80")
@@ -419,6 +422,7 @@ def parse_markdown(doc, path, *, skip_preamble=True):
                 paragraph.paragraph_format.space_before = Pt(4)
                 paragraph.paragraph_format.space_after = Pt(8)
                 paragraph.paragraph_format.line_spacing = 1.0
+                paragraph.paragraph_format.keep_together = True
                 p_pr = paragraph._p.get_or_add_pPr()
                 shade = OxmlElement("w:shd")
                 shade.set(qn("w:fill"), LIGHT_FILL)
@@ -436,6 +440,11 @@ def parse_markdown(doc, path, *, skip_preamble=True):
             index += 1
             continue
         if not stripped:
+            active_list_type = None
+            active_num_id = None
+            index += 1
+            continue
+        if stripped == ">":
             active_list_type = None
             active_num_id = None
             index += 1
@@ -519,7 +528,7 @@ def build_project_idea():
     configure_document(doc, "Kernscale | GSA-Projektidee")
     add_cover(
         doc,
-        "Kernscale Media Intelligence Loop",
+        "Levial by Kernscale",
         "Betreute Softwareplattform für kanalübergreifende Medienanalyse und bestätigtes Lernen",
         "Projektidee für das GSA-Gründungsstipendium Mecklenburg-Vorpommern",
         "Arbeitsfassung – Entwicklungszeiträume und einzelne Finanzangaben werden noch ergänzt.",
@@ -536,7 +545,7 @@ def build_business_concept():
     add_cover(
         doc,
         "Unternehmens- und Entwicklungskonzept",
-        "Kernscale Media Intelligence Loop",
+        "Levial by Kernscale",
         "Anlage zur Projektidee – Produkt, Markt, Umsetzung und Finanzierung",
         "Arbeitsfassung – bestätigte Angaben und offene Entscheidungen sind ausdrücklich getrennt.",
     )
@@ -553,9 +562,29 @@ def build_business_concept():
     return output
 
 
+def build_expert_opinion_package():
+    doc = Document()
+    configure_document(doc, "Levial by Kernscale | Fachliche Stellungnahme")
+    add_cover(
+        doc,
+        "Levial by Kernscale",
+        "Prüfunterlage für die fachliche Stellungnahme",
+        "GSA-Gründungsstipendium Mecklenburg-Vorpommern",
+        "Unabhängig zu prüfende Arbeitsfassung – keine vorweggenommene Stellungnahme der angefragten Einrichtung.",
+    )
+    doc.add_page_break()
+    parse_markdown(doc, SOURCE_DIR / "06-expert-opinion-package.md")
+    output = OUTPUT_DIR / "Kernscale-GSA-Fachliche-Stellungnahme-Pruefpaket.docx"
+    doc.save(output)
+    return output
+
+
 def main():
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
-    outputs = [build_project_idea(), build_business_concept()]
+    if "--expert-only" in sys.argv:
+        outputs = [build_expert_opinion_package()]
+    else:
+        outputs = [build_project_idea(), build_business_concept(), build_expert_opinion_package()]
     for output in outputs:
         print(output)
 
